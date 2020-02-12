@@ -1,10 +1,43 @@
-<input [(ngModel)]="userName" placeholder="Your name" class="user-name-input" />
-<br>
-<input [(ngModel)]="chatMessage" placeholder="A cool message" class="message-input" />
-<button (click)="sendMessage()" [disabled]="!userName || !chatMessage" class="send-button">Send</button>
-<br>
-<strong>Chat:</strong>
-<p *ngFor="let message of signalRService.chatMessages">{{message}}</p>
-<p class="end-of-chat">--end of chat--</p>
-
 <span class="user-amount">Käyttäjiä: {{signalRService.connectionAmount}}</span>
+
+<div id="play-area">
+  <div *ngFor="let player of signalRService.players">
+    <div class="player" [ngStyle]="
+      {
+        'margin-top.px': player.positionY*10,
+        'margin-left.px': player.positionX*10,
+        'background': player.playerColor,
+        'width.px': player.sizeX*10,
+        'height.px': player.sizeY*10
+      }">
+      <span>{{player.playerName}}</span>
+    </div>
+  </div>
+  <div *ngFor="let fireball of signalRService.fireballs">
+      <div class="fireball" [ngStyle]="
+        {
+          'margin-top.px': fireball.positionY*10,
+          'margin-left.px': fireball.positionX*10,
+          'width.px': fireball.sizeX*10,
+          'height.px': fireball.sizeY*10
+        }">
+        <span>O</span>
+      </div>
+    </div>
+</div>
+<div id="button-container">
+  <button class="movement-button" (click)="move(player, getDirectionInTemplate('Up'))">↑</button>
+  <br/>
+  <button class="movement-button" (click)="move(player, getDirectionInTemplate('Left'))">←</button>
+  <button class="movement-button" (click)="move(player, getDirectionInTemplate('Right'))">→</button>
+  <br/>
+  <button class="movement-button" (click)="move(player, getDirectionInTemplate('Down'))">↓</button>
+  <br/>
+  <br/>
+  <button class="movement-button" (click)="cast()">Cast</button>
+  <div class="hit-points-indicator"><span [ngStyle]="
+    {
+      'background-color': player.playerColor
+    }">Your hit points:</span><strong> {{player.hitPoints}}</strong></div>
+</div>
+

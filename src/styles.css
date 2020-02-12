@@ -1,27 +1,42 @@
-/* You can add global styles to this file, and also import other style files */
-body {
-  background-image: linear-gradient(to left, #fbf , #eef);
-}
-
-.send-button,
-input {
-  border-radius: 5px;
-  font-size: 150%;
-  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-  font-weight: 100;
-}
-
-.user-name-input,
-.message-input {
-  margin-bottom: 10px;
-}
-
 .user-amount {
   position: absolute;
   bottom: 10px;
   right: 10px;
 }
 
-.end-of-chat {
-  color: #999;
+#play-area {
+  position: absolute;
+  height: 500px;
+  width: 500px;
+  background: #4a4;
+}
+
+#button-container {
+  position: absolute;
+  top: 525px;
+  height: 200px;
+  width: 500px;
+  background: gray;
+  text-align: center;
+}
+
+.movement-button {
+  padding: 8px;
+}
+
+.player {
+  position: absolute;
+  border-radius: 15px;
+  text-align: center;
+}
+
+.fireball {
+  position: absolute;
+  border-radius: 15px;
+  text-align: center;
+  background-image: linear-gradient(red, yellow);
+}
+
+.hit-points-indicator {
+  text-align: left;
 }
