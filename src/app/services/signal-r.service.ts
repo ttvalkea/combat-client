@@ -19,7 +19,7 @@ export class SignalRService {
 
   public startConnection = () => {
     const isProductionEnvironment = environment.production;
-    const serverBaseUrl = isProductionEnvironment ? 'https://TODO-server.azurewebsites.net' : 'https://localhost:44342';//'https://localhost:5001';
+    const serverBaseUrl = isProductionEnvironment ? 'https://tuomas-angular-combat-server.azurewebsites.net' : 'https://localhost:44342';//'https://localhost:5001';
     this.hubConnection = new signalR.HubConnectionBuilder()
                             .withUrl(serverBaseUrl + '/chat')
                             .build();

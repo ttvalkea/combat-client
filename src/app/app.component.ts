@@ -42,7 +42,7 @@ export class AppComponent implements OnInit {
 
   private startHttpRequest = () => {
     const isProductionEnvironment = environment.production;
-    const serverBaseUrl = isProductionEnvironment ? 'https://TODO-server.azurewebsites.net/api' : 'https://localhost:44342/api'; //'https://localhost:5001/api';
+    const serverBaseUrl = isProductionEnvironment ? 'https://tuomas-angular-combat-server.azurewebsites.net/api' : 'https://localhost:44342/api'; //'https://localhost:5001/api';
     this.http.get(serverBaseUrl + '/chat')
       .subscribe(res => {
         console.log(res);
