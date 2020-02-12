@@ -56,35 +56,37 @@ export class AppComponent implements OnInit {
   //TODO: Make this ItemBase's function (use it with fireball as well) and use item.size there
   public move = (mover, direction: Direction, postMovementAction: Function) => {
 
-    mover.direction = direction;
+    if (this.player.hitPoints > 0) {
+      mover.direction = direction;
 
-    switch (direction) {
-      case Direction.Up:
-        mover.positionY -= 1;
-        break;
-      case Direction.Down:
-        mover.positionY += 1;
-        break;
-      case Direction.Left:
-        mover.positionX -= 1;
-        break;
-      case Direction.Right:
-        mover.positionX += 1;
-        break;
-    }
+      switch (direction) {
+        case Direction.Up:
+          mover.positionY -= 1;
+          break;
+        case Direction.Down:
+          mover.positionY += 1;
+          break;
+        case Direction.Left:
+          mover.positionX -= 1;
+          break;
+        case Direction.Right:
+          mover.positionX += 1;
+          break;
+      }
 
-    if (mover.positionX > 45) {
-      mover.positionX = 45;
-    } else if (mover.positionX < 0) {
-      mover.positionX = 0;
-    }
-    if (mover.positionY > 45) {
-      mover.positionY = 45;
-    } else if (mover.positionY < 0) {
-      mover.positionY = 0;
-    }
+      if (mover.positionX > 45) {
+        mover.positionX = 45;
+      } else if (mover.positionX < 0) {
+        mover.positionX = 0;
+      }
+      if (mover.positionY > 45) {
+        mover.positionY = 45;
+      } else if (mover.positionY < 0) {
+        mover.positionY = 0;
+      }
 
-    this.sendPlayerData();
+      this.sendPlayerData();
+    }
   }
 
   public getDirectionInTemplate = (dir: string) => {
@@ -101,6 +103,8 @@ export class AppComponent implements OnInit {
   }
 
   public cast = () => {
-    this.signalRService.broadcastFireballDataMessage(new Fireball(generateId(), this.player.id, this.player.positionX+2, this.player.positionY+2, this.player.direction, 100, 2, 2));
+    if (this.player.hitPoints > 0) {
+      this.signalRService.broadcastFireballDataMessage(new Fireball(generateId(), this.player.id, this.player.positionX+2, this.player.positionY+2, this.player.direction, 100, 2, 2));
+    }
   }
 }

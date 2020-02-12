@@ -14,7 +14,7 @@ export const getRandomPlayerColor = () => {
     case 4:
       return "cyan";
     case 5:
-      return "darkgreen";
+      return "lightseagreen";
     case 6:
       return "magenta";
     case 7:
@@ -29,6 +29,18 @@ export const getRandomPlayerColor = () => {
       return "olive";
     case 12:
       return "azure";
+    case 13:
+      return "lightcoral";
+    case 14:
+      return "deeppink";
+    case 15:
+      return "gold";
+    case 16:
+      return "greenyellow";
+    case 17:
+      return "palegreen";
+    case 18:
+      return "cornsilk";
   }
 }
 

@@ -6,11 +6,14 @@
       {
         'margin-top.px': player.positionY*10,
         'margin-left.px': player.positionX*10,
-        'background': player.playerColor,
+        'background': player.hitPoints > 0 ? player.playerColor : '#333',
+        'border': '1px solid ' + player.playerColor,
         'width.px': player.sizeX*10,
         'height.px': player.sizeY*10
       }">
       <span>{{player.playerName}}</span>
+      <br>
+      <span>{{player.hitPoints}}</span>
     </div>
   </div>
   <div *ngFor="let fireball of signalRService.fireballs">
@@ -38,6 +41,6 @@
   <div class="hit-points-indicator"><span [ngStyle]="
     {
       'background-color': player.playerColor
-    }">Your hit points:</span><strong> {{player.hitPoints}}</strong></div>
+    }">Your hit points:</span><strong> {{player.hitPoints}} <span *ngIf="player.hitPoints <= 0">You're dead!</span></strong></div>
 </div>
 

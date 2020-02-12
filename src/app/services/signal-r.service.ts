@@ -62,7 +62,7 @@ export class SignalRService {
       this.fireballs = this.fireballs.filter(fireball => fireball.id !== data.fireballId);
 
       if (listeningPlayer.id === data.playerId) {
-        listeningPlayer.hitPoints -= 1;
+        listeningPlayer.takeDamage(listeningPlayer, 1, this.broadcastPlayerDataMessage);
       }
     })
   }
@@ -105,7 +105,6 @@ export class SignalRService {
     for (let i = 0; i < playersOtherThanCaster.length; i++) {
       const collision = this.isFireballCollidingWithPlayer(fireball, playersOtherThanCaster[i]);
       if (collision) {
-        console.log('hit', fireball.id, playersOtherThanCaster[i].id)
         this.broadcastFireballHitPlayerMessage(fireball, playersOtherThanCaster[i]);
         fireball.isDestroyed = true;
         return;
