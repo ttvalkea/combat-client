@@ -3,7 +3,7 @@ import * as signalR from "@aspnet/signalr";
 import { environment } from '../../environments/environment';
 import { Player } from '../models/Player.model';
 import { Fireball } from '../models/Fireball.model';
-import { Direction } from '../enums/enums';
+import { Direction, OnCollisionAction } from '../enums/enums';
 import { ItemBase } from '../models/ItemBase.model';
 import { FireballHitPlayerData } from '../models/FireballHitPlayerData.model';
 
@@ -21,7 +21,7 @@ export class SignalRService {
     const isProductionEnvironment = environment.production;
     const serverBaseUrl = isProductionEnvironment ? 'https://tuomas-angular-combat-server.azurewebsites.net' : 'https://localhost:44342';//'https://localhost:5001';
     this.hubConnection = new signalR.HubConnectionBuilder()
-                            .withUrl(serverBaseUrl + '/chat')
+                            .withUrl(serverBaseUrl + '/hub')
                             .build();
 
     this.hubConnection
@@ -51,7 +51,6 @@ export class SignalRService {
     })
   }
 
-  //TODO: Only the fireball's caster should invoke this+
   public broadcastFireballHitPlayerMessage = (fireball: Fireball, player: Player) => {
     this.hubConnection.invoke('broadcastFireballHitPlayerMessage', fireball, player)
     .catch(err => console.error(err));
@@ -80,7 +79,6 @@ export class SignalRService {
     for (let i = 0; i < this.players.length - 1; i++) {
       for (let j = i+1; j < this.players.length; j++) {
         const collision = this.isPlayerCollidingWithPlayer(this.players[i], this.players[j]);
-        // console.log(collision, this.players[i].positionX, this.players[j].positionX, this.players[i].positionY, this.players[j].positionY);
       }
     }
   }
@@ -109,7 +107,6 @@ export class SignalRService {
         fireball.isDestroyed = true;
         return;
       }
-      // console.log(collision, fireball.positionX, playersOtherThanCaster[i].positionX, fireball.positionY, playersOtherThanCaster[i].positionY);
     }
   }
 
@@ -118,27 +115,29 @@ export class SignalRService {
   }
 
   public addBroadcastFireballDataMessageListener = (listeningPlayer: Player) => {
-    this.hubConnection.on('broadcastFireballDataMessage', (data: Fireball) => {
-      data.moveFunc = new Fireball('', '', 0, 0, Direction.Down, 0, 0, 0).moveFunc; //TODO: Movement function should be in utils or somewhere general
-      this.fireballs.push(data);
+    this.hubConnection.on('broadcastFireballDataMessage', (fireball: Fireball) => {
+
+      //Server can't return the move function, so it's reassigned here
+      fireball.move = new ItemBase().move;
+      this.fireballs.push(fireball);
       //Fireball's movement
       const interval = setInterval(() => {
-        if (!data.isDestroyed) {
-          data.moveFunc(data, data.direction, () => {});
+        if (!fireball.isDestroyed) {
+          fireball.move(fireball, fireball.direction, () => {}, OnCollisionAction.Destroy);
 
           //Only the player, who cast the fireball, makes collision checks and broadcasts them to everyone
-          if (data.casterId === listeningPlayer.id) {
-            this.getFireballWithPlayersCollisions(data);
+          if (fireball.casterId === listeningPlayer.id) {
+            this.getFireballWithPlayersCollisions(fireball);
             console.log()
           }
 
-          if (data.isDestroyed) {
-            this.fireballs = this.fireballs.filter(x => x.id !== data.id);
+          if (fireball.isDestroyed) {
+            this.fireballs = this.fireballs.filter(x => x.id !== fireball.id);
           }
         } else {
           clearInterval(interval);
         }
-      }, data.moveIntervalMs);
+      }, fireball.moveIntervalMs);
     })
   }
 }

@@ -6,6 +6,8 @@ import { getRandomNumber, getRandomPlayerColor, generateId } from './utils/utils
 import { Player } from './models/Player.model';
 import { Fireball } from './models/Fireball.model';
 import { Direction } from './enums/enums';
+import { Constants } from './constants/constants';
+
 
 //TODO: Refactor different entities into their own files (Player etc)
 
@@ -18,6 +20,7 @@ export class AppComponent implements OnInit {
 
   public player: Player = new Player();
   public refresher: number = 1; //This will just flick between 1 and -1 indefinitely, ensuring DOM refreshing.
+  public constants = Constants; //This is declared for Angular template to have access to constants
 
   constructor(public signalRService: SignalRService, private http: HttpClient) {
     this.player.id = generateId();
@@ -25,9 +28,9 @@ export class AppComponent implements OnInit {
     this.player.positionY = getRandomNumber(1, 40);
     this.player.playerName = 'A';
     this.player.playerColor = getRandomPlayerColor();
-    this.player.sizeX = 5; //TODO: Put all of these constants to a constants file
-    this.player.sizeY = 5;
-    this.player.hitPoints = 5;
+    this.player.sizeX = Constants.PLAYER_SIZE_X;
+    this.player.sizeY = Constants.PLAYER_SIZE_Y;
+    this.player.hitPoints = Constants.PLAYER_STARTING_HIT_POINTS;
   }
 
   ngOnInit() {
@@ -41,13 +44,13 @@ export class AppComponent implements OnInit {
     this.startHttpRequest();
 
     //Refresher makes sure that clients update dom all the time
-    setInterval(() => {this.refresher=this.refresher*-1}, 10);
+    setInterval(() => {this.refresher=this.refresher*-1}, Constants.REFRESHER_REFRESH_RATE_MS);
   }
 
   private startHttpRequest = () => {
     const isProductionEnvironment = environment.production;
     const serverBaseUrl = isProductionEnvironment ? 'https://tuomas-angular-combat-server.azurewebsites.net/api' : 'https://localhost:44342/api'; //'https://localhost:5001/api';
-    this.http.get(serverBaseUrl + '/chat')
+    this.http.get(serverBaseUrl + '/hub')
       .subscribe(res => {
         console.log(res);
       })
@@ -55,42 +58,6 @@ export class AppComponent implements OnInit {
 
   public sendPlayerData = () => {
     this.signalRService.broadcastPlayerDataMessage(this.player);
-  }
-
-  //TODO: Make this ItemBase's function (use it with fireball as well) and use item.size there
-  public move = (mover, direction: Direction, postMovementAction: Function) => {
-
-    if (this.player.hitPoints > 0) {
-      mover.direction = direction;
-
-      switch (direction) {
-        case Direction.Up:
-          mover.positionY -= 1;
-          break;
-        case Direction.Down:
-          mover.positionY += 1;
-          break;
-        case Direction.Left:
-          mover.positionX -= 1;
-          break;
-        case Direction.Right:
-          mover.positionX += 1;
-          break;
-      }
-
-      if (mover.positionX > 45) {
-        mover.positionX = 45;
-      } else if (mover.positionX < 0) {
-        mover.positionX = 0;
-      }
-      if (mover.positionY > 45) {
-        mover.positionY = 45;
-      } else if (mover.positionY < 0) {
-        mover.positionY = 0;
-      }
-
-      this.sendPlayerData();
-    }
   }
 
   public getDirectionInTemplate = (dir: string) => {
@@ -120,16 +87,16 @@ export class AppComponent implements OnInit {
   onKeyDown(event:KeyboardEvent) {
     switch (event.key) {
       case "ArrowUp":
-        this.move(this.player, Direction.Up, this.emptyFunction);
+        this.player.move(this.player, Direction.Up, this.sendPlayerData);
         break;
       case "ArrowDown":
-        this.move(this.player, Direction.Down, this.emptyFunction);
+        this.player.move(this.player, Direction.Down, this.sendPlayerData);
         break;
       case "ArrowLeft":
-        this.move(this.player, Direction.Left, this.emptyFunction);
+        this.player.move(this.player, Direction.Left, this.sendPlayerData);
         break;
       case "ArrowRight":
-        this.move(this.player, Direction.Right, this.emptyFunction);
+        this.player.move(this.player, Direction.Right, this.sendPlayerData);
         break;
       case "Control":
           this.cast();
