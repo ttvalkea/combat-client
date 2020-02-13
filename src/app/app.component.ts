@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { SignalRService } from './services/signal-r.service';
 import { HttpClient } from '@angular/common/http';
 import { environment } from './../environments/environment';
@@ -17,7 +17,7 @@ import { Direction } from './enums/enums';
 export class AppComponent implements OnInit {
 
   public player: Player = new Player();
-  public refresher: number = 1;
+  public refresher: number = 1; //This will just flick between 1 and -1 indefinitely, ensuring DOM refreshing.
 
   constructor(public signalRService: SignalRService, private http: HttpClient) {
     this.player.id = generateId();
@@ -114,4 +114,28 @@ export class AppComponent implements OnInit {
 
   //Apparently you can't use () => {} in Angular templates, so we use this great function.
   public emptyFunction = () => {}
+
+  //Keyboard actions
+  @HostListener("window:keydown", ['$event'])
+  onKeyDown(event:KeyboardEvent) {
+    switch (event.key) {
+      case "ArrowUp":
+        this.move(this.player, Direction.Up, this.emptyFunction);
+        break;
+      case "ArrowDown":
+        this.move(this.player, Direction.Down, this.emptyFunction);
+        break;
+      case "ArrowLeft":
+        this.move(this.player, Direction.Left, this.emptyFunction);
+        break;
+      case "ArrowRight":
+        this.move(this.player, Direction.Right, this.emptyFunction);
+        break;
+      case "Control":
+          this.cast();
+          break;
+      default:
+        break;
+    }
+  }
 }

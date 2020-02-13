@@ -1,7 +1,7 @@
 <span class="user-amount">Käyttäjiä: {{signalRService.connectionAmount}}</span>
 <span class="refresher">{{refresher}}</span>
 
-<div id="play-area">
+<div id="play-area" (keydown)="onKeyDown($event)">
   <div *ngFor="let player of signalRService.players">
     <div class="player" [ngStyle]="
       {
