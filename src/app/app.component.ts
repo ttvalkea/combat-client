@@ -107,4 +107,7 @@ export class AppComponent implements OnInit {
       this.signalRService.broadcastFireballDataMessage(new Fireball(generateId(), this.player.id, this.player.positionX+2, this.player.positionY+2, this.player.direction, 100, 2, 2));
     }
   }
+
+  //Apparently you can't use () => {} in Angular templates, so we use this great function.
+  public emptyFunction = () => {}
 }

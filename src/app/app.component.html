@@ -29,12 +29,12 @@
     </div>
 </div>
 <div id="button-container">
-  <button class="movement-button" (click)="move(player, getDirectionInTemplate('Up'), () => {})">↑</button>
+  <button class="movement-button" (click)="move(player, getDirectionInTemplate('Up'), emptyFunction)">↑</button>
   <br/>
-  <button class="movement-button" (click)="move(player, getDirectionInTemplate('Left'), () => {})">←</button>
-  <button class="movement-button" (click)="move(player, getDirectionInTemplate('Right'), () => {})">→</button>
+  <button class="movement-button" (click)="move(player, getDirectionInTemplate('Left'), emptyFunction)">←</button>
+  <button class="movement-button" (click)="move(player, getDirectionInTemplate('Right'), emptyFunction)">→</button>
   <br/>
-  <button class="movement-button" (click)="move(player, getDirectionInTemplate('Down'), () => {})">↓</button>
+  <button class="movement-button" (click)="move(player, getDirectionInTemplate('Down'), emptyFunction)">↓</button>
   <br/>
   <br/>
   <button class="movement-button" (click)="cast()">Cast</button>
