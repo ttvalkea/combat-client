@@ -40,3 +40,10 @@
 .hit-points-indicator {
   text-align: left;
 }
+
+.refresher {
+  position: absolute;
+  bottom: 0;
+  font-size: 4px;
+  color: gray;
+}

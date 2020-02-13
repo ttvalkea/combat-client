@@ -17,6 +17,7 @@ import { Direction } from './enums/enums';
 export class AppComponent implements OnInit {
 
   public player: Player = new Player();
+  public refresher: number = 1;
 
   constructor(public signalRService: SignalRService, private http: HttpClient) {
     this.player.id = generateId();
@@ -38,6 +39,9 @@ export class AppComponent implements OnInit {
     this.signalRService.addBroadcastFireballHitPlayerMessageListener(this.player);
 
     this.startHttpRequest();
+
+    //Refresher makes sure that clients update dom all the time
+    setInterval(() => {this.refresher=this.refresher*-1}, 10);
   }
 
   private startHttpRequest = () => {
