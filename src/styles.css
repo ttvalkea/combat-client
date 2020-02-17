@@ -28,6 +28,9 @@
   position: absolute;
   border-radius: 15px;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .fireball {

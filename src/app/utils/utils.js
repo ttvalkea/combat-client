@@ -48,3 +48,12 @@ export const generateId = (prefix) => {
   return (prefix ? prefix : '') + Date.now() + getRandomNumber(0, 1000).toString();
 }
 
+export const getXAndYIncrementsByAngle = (angle) => {
+  const angleInRadians = convertAngleToRadians(angle);
+  return {
+    x: Math.cos(angleInRadians),
+    y: Math.sin(angleInRadians)
+  }
+}
+
+const convertAngleToRadians = (angle) => angle * (Math.PI / 180);

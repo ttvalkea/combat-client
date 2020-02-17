@@ -1,4 +1,4 @@
-<span class="user-amount">Käyttäjiä: {{signalRService.connectionAmount}}</span>
+<span class="user-amount">Number of players: {{signalRService.connectionAmount}}</span>
 <span class="refresher">{{refresher}}</span>
 
 <div id="play-area" (keydown)="onKeyDown($event)">
@@ -12,8 +12,11 @@
         'width.px': player.sizeX*constants.POSITION_TO_DISPLAY_MULTIPLAYER,
         'height.px': player.sizeY*constants.POSITION_TO_DISPLAY_MULTIPLAYER
       }">
-      <span>{{player.playerName}}</span>
-      <br>
+      <span *ngIf="player.id === clientPlayer.id" [ngStyle]="
+        {
+          'transform': 'rotate(' + clientPlayer.direction + 'deg)'
+        }
+      ">--></span>
       <span>{{player.hitPoints}}</span>
     </div>
   </div>
@@ -30,18 +33,18 @@
     </div>
 </div>
 <div id="button-container">
-  <button class="movement-button" (click)="player.move(player, getDirectionInTemplate('Up'), sendPlayerData)">↑</button>
+  <button class="movement-button" (click)="go()">↑</button>
   <br/>
-  <button class="movement-button" (click)="player.move(player, getDirectionInTemplate('Left'), sendPlayerData)">←</button>
-  <button class="movement-button" (click)="player.move(player, getDirectionInTemplate('Right'), sendPlayerData)">→</button>
+  <button class="movement-button" (click)="turnLeft()">←</button>
+  <button class="movement-button" (click)="turnRight()">→</button>
   <br/>
-  <button class="movement-button" (click)="player.move(player, getDirectionInTemplate('Down'), sendPlayerData)">↓</button>
+  <button class="movement-button" (click)="goBackwards()">↓</button>
   <br/>
   <br/>
   <button class="movement-button" (click)="cast()">Cast</button>
   <div class="hit-points-indicator"><span [ngStyle]="
     {
-      'background-color': player.playerColor
-    }">Your hit points:</span><strong> {{player.hitPoints}} <span *ngIf="player.hitPoints <= 0">You're dead!</span></strong></div>
+      'background-color': clientPlayer.playerColor
+    }">Your hit points:</span><strong> {{clientPlayer.hitPoints}} <span *ngIf="clientPlayer.hitPoints <= 0">You're dead!</span></strong></div>
 </div>
 

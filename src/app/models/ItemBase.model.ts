@@ -1,26 +1,16 @@
-import { Direction, OnCollisionAction } from '../enums/enums';
+import { OnCollisionAction } from '../enums/enums';
 import { Constants } from '../constants/constants';
+import { getXAndYIncrementsByAngle } from '../utils/utils';
 
 export class ItemBase {
 
-  moveFunction = (mover, direction: Direction, postMovementAction: Function, onCollisionAction: OnCollisionAction = OnCollisionAction.Stop) => {
+  angledMoveFunction = (mover, direction: number, postMovementAction: Function, onCollisionAction: OnCollisionAction = OnCollisionAction.Stop) => {
 
     mover.direction = direction;
+    const xAndYIncrement = getXAndYIncrementsByAngle(direction);
 
-    switch (direction) {
-      case Direction.Up:
-        mover.positionY -= 1;
-        break;
-      case Direction.Down:
-        mover.positionY += 1;
-        break;
-      case Direction.Left:
-        mover.positionX -= 1;
-        break;
-      case Direction.Right:
-        mover.positionX += 1;
-        break;
-    }
+    mover.positionX += xAndYIncrement.x;
+    mover.positionY += xAndYIncrement.y;
 
     if ((mover.positionX + mover.sizeX) > Constants.PLAY_AREA_SIZE_X) {
       if (onCollisionAction === OnCollisionAction.Destroy) {
@@ -48,16 +38,15 @@ export class ItemBase {
         mover.positionY = 0;
       }
     }
-
     postMovementAction();
   }
 
   id: string;
   positionX: number;
   positionY: number;
-  direction: Direction;
+  direction: number;
   sizeX: number;
   sizeY: number;
-  move: Function = this.moveFunction;
+  move: Function = this.angledMoveFunction;
 };
 

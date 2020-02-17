@@ -1,4 +1,3 @@
-import { Direction } from '../enums/enums';
 import { ItemBase } from './ItemBase.model';
 
 export class Fireball extends ItemBase {
@@ -6,7 +5,7 @@ export class Fireball extends ItemBase {
   moveIntervalMs: number;
   isDestroyed: Boolean = false;
 
-  constructor(id: string, casterId: string, positionX: number, positionY: number, direction: Direction, moveIntervalMs: number, sizeX: number, sizeY: number) {
+  constructor(id: string, casterId: string, positionX: number, positionY: number, direction: number, moveIntervalMs: number, sizeX: number, sizeY: number) {
 
     super();
 
