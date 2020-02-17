@@ -3,7 +3,7 @@ import * as signalR from "@aspnet/signalr";
 import { environment } from '../../environments/environment';
 import { Player } from '../models/Player.model';
 import { Fireball } from '../models/Fireball.model';
-import { Direction, OnCollisionAction } from '../enums/enums';
+import { OnCollisionAction } from '../enums/enums';
 import { ItemBase } from '../models/ItemBase.model';
 import { FireballHitPlayerData } from '../models/FireballHitPlayerData.model';
 

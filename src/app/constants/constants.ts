@@ -8,4 +8,8 @@ export class Constants {
 
   public static PLAY_AREA_SIZE_X: number = 50;
   public static PLAY_AREA_SIZE_Y: number = 50;
+
+  public static FIREBALL_SIZE_X: number = 2;
+  public static FIREBALL_SIZE_Y: number = 2;
+  public static FIREBALL_MOVEMENT_INTERVAL: number = 100;
 }

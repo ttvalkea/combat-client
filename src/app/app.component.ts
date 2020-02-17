@@ -75,7 +75,16 @@ export class AppComponent implements OnInit {
 
   public cast = () => {
     if (this.player.hitPoints > 0) {
-      this.signalRService.broadcastFireballDataMessage(new Fireball(generateId(), this.player.id, this.player.positionX+2, this.player.positionY+2, this.player.direction, 100, 2, 2));
+      this.signalRService.broadcastFireballDataMessage(new Fireball(
+        generateId(),
+        this.player.id,
+        this.player.positionX+Math.floor(this.player.sizeX/2)-Math.floor(Constants.FIREBALL_SIZE_X/2),
+        this.player.positionY+Math.floor(this.player.sizeY/2)-Math.floor(Constants.FIREBALL_SIZE_Y/2),
+        this.player.direction,
+        Constants.FIREBALL_MOVEMENT_INTERVAL,
+        Constants.FIREBALL_SIZE_X,
+        Constants.FIREBALL_SIZE_Y
+      ));
     }
   }
 

@@ -30,12 +30,12 @@
     </div>
 </div>
 <div id="button-container">
-  <button class="movement-button" (click)="player.move(player, getDirectionInTemplate('Up'), emptyFunction)">↑</button>
+  <button class="movement-button" (click)="player.move(player, getDirectionInTemplate('Up'), sendPlayerData)">↑</button>
   <br/>
-  <button class="movement-button" (click)="player.move(player, getDirectionInTemplate('Left'), emptyFunction)">←</button>
-  <button class="movement-button" (click)="player.move(player, getDirectionInTemplate('Right'), emptyFunction)">→</button>
+  <button class="movement-button" (click)="player.move(player, getDirectionInTemplate('Left'), sendPlayerData)">←</button>
+  <button class="movement-button" (click)="player.move(player, getDirectionInTemplate('Right'), sendPlayerData)">→</button>
   <br/>
-  <button class="movement-button" (click)="player.move(player, getDirectionInTemplate('Down'), emptyFunction)">↓</button>
+  <button class="movement-button" (click)="player.move(player, getDirectionInTemplate('Down'), sendPlayerData)">↓</button>
   <br/>
   <br/>
   <button class="movement-button" (click)="cast()">Cast</button>
