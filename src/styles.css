@@ -19,6 +19,14 @@
   background: gray;
   text-align: center;
 }
+#server-control-button-container {
+  position: absolute;
+  top: 750px;
+  height: 100px;
+  width: 500px;
+  background: #444;
+  text-align: right;
+}
 
 .movement-button {
   padding: 8px;
@@ -38,6 +46,12 @@
   border-radius: 15px;
   text-align: center;
   background-image: linear-gradient(red, yellow);
+}
+
+.obstacle {
+  position: absolute;
+  border-radius: 5px;
+  background-image: linear-gradient(#666, #333);
 }
 
 .hit-points-indicator {

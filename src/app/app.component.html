@@ -21,16 +21,27 @@
     </div>
   </div>
   <div *ngFor="let fireball of signalRService.fireballs">
-      <div class="fireball" [ngStyle]="
-        {
-          'margin-top.px': fireball.positionY*constants.POSITION_TO_DISPLAY_MULTIPLAYER,
-          'margin-left.px': fireball.positionX*constants.POSITION_TO_DISPLAY_MULTIPLAYER,
-          'width.px': fireball.sizeX*constants.POSITION_TO_DISPLAY_MULTIPLAYER,
-          'height.px': fireball.sizeY*constants.POSITION_TO_DISPLAY_MULTIPLAYER
-        }">
-        <span>O</span>
-      </div>
+    <div class="fireball" [ngStyle]="
+      {
+        'margin-top.px': fireball.positionY*constants.POSITION_TO_DISPLAY_MULTIPLAYER,
+        'margin-left.px': fireball.positionX*constants.POSITION_TO_DISPLAY_MULTIPLAYER,
+        'width.px': fireball.sizeX*constants.POSITION_TO_DISPLAY_MULTIPLAYER,
+        'height.px': fireball.sizeY*constants.POSITION_TO_DISPLAY_MULTIPLAYER
+      }">
+      <span>O</span>
     </div>
+  </div>
+  <div *ngFor="let obstacle of signalRService.obstacles">
+    <div class="obstacle" [ngStyle]="
+      {
+        'margin-top.px': obstacle.positionY*constants.POSITION_TO_DISPLAY_MULTIPLAYER,
+        'margin-left.px': obstacle.positionX*constants.POSITION_TO_DISPLAY_MULTIPLAYER,
+        'width.px': obstacle.sizeX*constants.POSITION_TO_DISPLAY_MULTIPLAYER,
+        'height.px': obstacle.sizeY*constants.POSITION_TO_DISPLAY_MULTIPLAYER
+      }">
+      <span></span>
+    </div>
+  </div>
 </div>
 <div id="button-container">
   <button class="movement-button" (click)="go()">↑</button>
@@ -48,3 +59,6 @@
     }">Your hit points:</span><strong> {{clientPlayer.hitPoints}} <span *ngIf="clientPlayer.hitPoints <= 0">You're dead!</span></strong></div>
 </div>
 
+<div id="server-control-button-container">
+  <button (click)="sendObstacleGenerationRequest()">Generate obstacles</button>
+</div>

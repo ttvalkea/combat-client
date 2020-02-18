@@ -2,10 +2,11 @@ import { Component, OnInit, HostListener } from '@angular/core';
 import { SignalRService } from './services/signal-r.service';
 import { HttpClient } from '@angular/common/http';
 import { environment } from './../environments/environment';
-import { getRandomNumber, getRandomPlayerColor, generateId } from './utils/utils';
 import { Player } from './models/Player.model';
 import { Fireball } from './models/Fireball.model';
 import { Constants } from './constants/constants';
+import { Utilities } from './utils/utilities';
+import { OnCollisionAction } from './enums/enums';
 
 
 //TODO: Refactor different entities into their own files (Player etc)
@@ -22,11 +23,11 @@ export class AppComponent implements OnInit {
   public constants = Constants; //This is declared for Angular template to have access to constants
 
   constructor(public signalRService: SignalRService, private http: HttpClient) {
-    this.clientPlayer.id = generateId();
-    this.clientPlayer.positionX = getRandomNumber(1, 40);
-    this.clientPlayer.positionY = getRandomNumber(1, 40);
+    this.clientPlayer.id = Utilities.generateId();
+    this.clientPlayer.positionX = Utilities.getRandomNumber(1, 40);
+    this.clientPlayer.positionY = Utilities.getRandomNumber(1, 40);
     this.clientPlayer.playerName = 'A';
-    this.clientPlayer.playerColor = getRandomPlayerColor();
+    this.clientPlayer.playerColor = Utilities.getRandomPlayerColor();
     this.clientPlayer.sizeX = Constants.PLAYER_SIZE_X;
     this.clientPlayer.sizeY = Constants.PLAYER_SIZE_Y;
     this.clientPlayer.hitPoints = Constants.PLAYER_STARTING_HIT_POINTS;
@@ -40,6 +41,7 @@ export class AppComponent implements OnInit {
     this.signalRService.addBroadcastPlayerDataMessageListener();
     this.signalRService.addBroadcastFireballDataMessageListener(this.clientPlayer);
     this.signalRService.addBroadcastFireballHitPlayerMessageListener(this.clientPlayer);
+    this.signalRService.addBroadcastObstacleGenerationRequestListener();
 
     this.startHttpRequest();
 
@@ -63,7 +65,7 @@ export class AppComponent implements OnInit {
   public cast = () => {
     if (this.clientPlayer.hitPoints > 0) {
       this.signalRService.broadcastFireballDataMessage(new Fireball(
-        generateId(),
+        Utilities.generateId(),
         this.clientPlayer.id,
         this.clientPlayer.positionX+Math.floor(this.clientPlayer.sizeX/2)-Math.floor(Constants.FIREBALL_SIZE_X/2),
         this.clientPlayer.positionY+Math.floor(this.clientPlayer.sizeY/2)-Math.floor(Constants.FIREBALL_SIZE_Y/2),
@@ -114,13 +116,17 @@ export class AppComponent implements OnInit {
   }
   go = () => {
     if (this.clientPlayer.hitPoints > 0) {
-      this.clientPlayer.move(this.clientPlayer, this.clientPlayer.direction, this.sendPlayerData);
+      this.clientPlayer.move(this.clientPlayer, this.clientPlayer.direction, this.sendPlayerData, OnCollisionAction.Stop, this.signalRService.obstacles);
     }
   }
   goBackwards = () => {
     if (this.clientPlayer.hitPoints > 0) {
-      this.clientPlayer.move(this.clientPlayer, this.clientPlayer.direction-180, this.sendPlayerData);
+      this.clientPlayer.move(this.clientPlayer, this.clientPlayer.direction-180, this.sendPlayerData, OnCollisionAction.Stop, this.signalRService.obstacles);
       this.clientPlayer.direction += 180;
     }
+  }
+
+  sendObstacleGenerationRequest = () => {
+    this.signalRService.broadcastObstacleGenerationRequest();
   }
 }

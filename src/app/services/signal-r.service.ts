@@ -3,9 +3,11 @@ import * as signalR from "@aspnet/signalr";
 import { environment } from '../../environments/environment';
 import { Player } from '../models/Player.model';
 import { Fireball } from '../models/Fireball.model';
+import { Obstacle } from '../models/Obstacle.model';
 import { OnCollisionAction } from '../enums/enums';
 import { ItemBase } from '../models/ItemBase.model';
 import { FireballHitPlayerData } from '../models/FireballHitPlayerData.model';
+import { Utilities } from '../utils/utilities';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +18,7 @@ export class SignalRService {
 
   public players: Player[] = [];
   public fireballs: Fireball[] = [];
+  public obstacles: Obstacle[] = [];
 
   public startConnection = () => {
     const isProductionEnvironment = environment.production;
@@ -70,26 +73,6 @@ export class SignalRService {
   private updatePlayerData = (playerData: Player) => {
     this.players = this.players.filter(player => player.id !== playerData.id);
     this.players.push(playerData);
-    this.getPlayersWithPlayersCollisions();
-  }
-
-   //TODO: Make a more general collision function instead of duplicating this one
-  private getPlayersWithPlayersCollisions = () => {
-    //Check each player pair's collision. Players A, B, C, D: For A, check with B, C and D. For B, check with C, D. For C, check with D. For D, check with no-one.
-    for (let i = 0; i < this.players.length - 1; i++) {
-      for (let j = i+1; j < this.players.length; j++) {
-        const collision = this.isPlayerCollidingWithPlayer(this.players[i], this.players[j]);
-      }
-    }
-  }
-
-  private isPlayerCollidingWithPlayer = (player1: Player, player2: Player) => {
-    return this.areItemsColliding(player1, player2);
-  }
-
-  private areItemsColliding = (item1: ItemBase, item2: ItemBase) => {
-    return  Math.abs((item1.positionX + item1.sizeX/2) - (item2.positionX + item2.sizeX/2)) < (item1.sizeX+item2.sizeX)/2 &&
-            Math.abs((item1.positionY + item1.sizeY/2) - (item2.positionY + item2.sizeY/2)) < (item1.sizeY+item2.sizeY)/2;
   }
 
   public broadcastFireballDataMessage = (message: Fireball) => {
@@ -97,21 +80,12 @@ export class SignalRService {
     .catch(err => console.error(err));
   }
 
-  //TODO: Make a more general collision function instead of duplicating this one
   private getFireballWithPlayersCollisions = (fireball: Fireball) => {
     const playersOtherThanCaster = this.players.filter(player => player.id !== fireball.casterId);
-    for (let i = 0; i < playersOtherThanCaster.length; i++) {
-      const collision = this.isFireballCollidingWithPlayer(fireball, playersOtherThanCaster[i]);
-      if (collision) {
-        this.broadcastFireballHitPlayerMessage(fireball, playersOtherThanCaster[i]);
-        fireball.isDestroyed = true;
-        return;
-      }
-    }
-  }
-
-  private isFireballCollidingWithPlayer = (fireball: Fireball, player: Player) => {
-    return this.areItemsColliding(fireball, player);
+    Utilities.doItemCollision(fireball, playersOtherThanCaster, (collidedPlayer) => {
+      this.broadcastFireballHitPlayerMessage(fireball, collidedPlayer);
+      fireball.isDestroyed = true;
+    });
   }
 
   public addBroadcastFireballDataMessageListener = (listeningPlayer: Player) => {
@@ -123,7 +97,7 @@ export class SignalRService {
       //Fireball's movement
       const interval = setInterval(() => {
         if (!fireball.isDestroyed) {
-          fireball.move(fireball, fireball.direction, () => {}, OnCollisionAction.Destroy);
+          fireball.move(fireball, fireball.direction, () => {}, OnCollisionAction.Destroy, this.obstacles);
 
           //Only the player, who cast the fireball, makes collision checks and broadcasts them to everyone
           if (fireball.casterId === listeningPlayer.id) {
@@ -138,6 +112,17 @@ export class SignalRService {
           clearInterval(interval);
         }
       }, fireball.moveIntervalMs);
+    })
+  }
+
+  public broadcastObstacleGenerationRequest = () => {
+    this.hubConnection.invoke('broadcastObstacleGenerationRequest')
+    .catch(err => console.error(err));
+  }
+
+  public addBroadcastObstacleGenerationRequestListener = () => {
+    this.hubConnection.on('broadcastObstacleGenerationRequest', (data: Obstacle[]) => {
+      this.obstacles = data;
     })
   }
 }
