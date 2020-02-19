@@ -84,17 +84,24 @@ export class Utilities {
     mover.direction = direction;
     const xAndYIncrement = Utilities.getXAndYIncrementsByAngle(direction);
 
-    mover.positionX += xAndYIncrement.x;
-    mover.positionY += xAndYIncrement.y;
-
-    Utilities.doItemCollision(mover, obstacles, () => {
-      if (onCollisionAction === OnCollisionAction.Destroy) {
+    if (onCollisionAction === OnCollisionAction.Destroy) {
+      mover.positionX += xAndYIncrement.x;
+      mover.positionY += xAndYIncrement.y;
+      Utilities.doItemCollision(mover, obstacles, () => {
         mover.isDestroyed = true;
-      } else if (onCollisionAction === OnCollisionAction.Stop) {
+      });
+    } else if (onCollisionAction === OnCollisionAction.Stop) {
+      //For stopping objects, movement is done in two parts to have the object "slide" along an obstacle instead of stopping fully if colliding even a little bit.
+      mover.positionX += xAndYIncrement.x;
+      Utilities.doItemCollision(mover, obstacles, () => {
         mover.positionX -= xAndYIncrement.x;
+      });
+
+      mover.positionY += xAndYIncrement.y;
+      Utilities.doItemCollision(mover, obstacles, () => {
         mover.positionY -= xAndYIncrement.y;
-      }
-    });
+      });
+    }
 
     //Play area edge checks
     if ((mover.positionX + mover.sizeX) > Constants.PLAY_AREA_SIZE_X) {
