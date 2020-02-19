@@ -29,8 +29,13 @@ export class SignalRService {
 
     this.hubConnection
       .start()
-      .then(() => console.log('Connection started'))
+      .then(this.actionsAfterSignalRConnectionStarted)
       .catch(err => console.log('Error while starting connection: ' + err))
+  }
+
+  private actionsAfterSignalRConnectionStarted = () => {
+    console.log('SignalR connection formed.');
+    this.broadcastGetObstacles(false);
   }
 
   public addBroadcastConnectionAmountDataListener = (playerInfoFunction: Function) => {
@@ -115,13 +120,14 @@ export class SignalRService {
     })
   }
 
-  public broadcastObstacleGenerationRequest = () => {
-    this.hubConnection.invoke('broadcastObstacleGenerationRequest')
+  public broadcastGetObstacles = (generateNewObstacles: boolean) => {
+    console.log('broadcastGetObstacles')
+    this.hubConnection.invoke('broadcastGetObstacles', generateNewObstacles)
     .catch(err => console.error(err));
   }
 
-  public addBroadcastObstacleGenerationRequestListener = () => {
-    this.hubConnection.on('broadcastObstacleGenerationRequest', (data: Obstacle[]) => {
+  public addBroadcastGetObstaclesListener = () => {
+    this.hubConnection.on('broadcastGetObstacles', (data: Obstacle[]) => {
       this.obstacles = data;
     })
   }

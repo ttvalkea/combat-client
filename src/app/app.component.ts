@@ -41,7 +41,7 @@ export class AppComponent implements OnInit {
     this.signalRService.addBroadcastPlayerDataMessageListener();
     this.signalRService.addBroadcastFireballDataMessageListener(this.clientPlayer);
     this.signalRService.addBroadcastFireballHitPlayerMessageListener(this.clientPlayer);
-    this.signalRService.addBroadcastObstacleGenerationRequestListener();
+    this.signalRService.addBroadcastGetObstaclesListener();
 
     this.startHttpRequest();
 
@@ -124,9 +124,5 @@ export class AppComponent implements OnInit {
       this.clientPlayer.move(this.clientPlayer, this.clientPlayer.direction-180, this.sendPlayerData, OnCollisionAction.Stop, this.signalRService.obstacles);
       this.clientPlayer.direction += 180;
     }
-  }
-
-  sendObstacleGenerationRequest = () => {
-    this.signalRService.broadcastObstacleGenerationRequest();
   }
 }

@@ -60,5 +60,5 @@
 </div>
 
 <div id="server-control-button-container">
-  <button (click)="sendObstacleGenerationRequest()">Generate obstacles</button>
+  <button (click)="signalRService.broadcastGetObstacles(true)">Generate obstacles</button>
 </div>

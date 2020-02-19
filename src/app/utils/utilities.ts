@@ -61,7 +61,6 @@ export class Utilities {
   }
 
   public static doItemCollision = (collidingItem: ItemBase, itemsToCollideWith: ItemBase[], actionOnCollision: Function) => {
-    console.log(collidingItem, itemsToCollideWith)
     for (let i = 0; i < itemsToCollideWith.length; i++) {
       const collision = Utilities.areItemsColliding(collidingItem, itemsToCollideWith[i]);
       if (collision) {
