@@ -6,24 +6,16 @@
 
 #play-area {
   position: absolute;
-  height: 500px;
-  width: 500px;
   background: #4a4;
 }
 
 #button-container {
   position: absolute;
-  top: 525px;
-  height: 200px;
-  width: 500px;
   background: gray;
   text-align: center;
 }
 #server-control-button-container {
   position: absolute;
-  top: 750px;
-  height: 100px;
-  width: 500px;
   background: #444;
   text-align: right;
 }

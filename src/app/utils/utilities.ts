@@ -87,8 +87,6 @@ export class Utilities {
     mover.positionX += xAndYIncrement.x;
     mover.positionY += xAndYIncrement.y;
 
-
-
     Utilities.doItemCollision(mover, obstacles, () => {
       if (onCollisionAction === OnCollisionAction.Destroy) {
         mover.isDestroyed = true;

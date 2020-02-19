@@ -7,8 +7,8 @@ export class Constants {
   public static PLAYER_STARTING_HIT_POINTS: number = 5;
   public static PLAYER_ROTATE_ANGLE_AMOUNT: number = 22.5;
 
-  public static PLAY_AREA_SIZE_X: number = 50;
-  public static PLAY_AREA_SIZE_Y: number = 50;
+  public static PLAY_AREA_SIZE_X: number = 75;
+  public static PLAY_AREA_SIZE_Y: number = 75;
 
   public static FIREBALL_SIZE_X: number = 2;
   public static FIREBALL_SIZE_Y: number = 2;

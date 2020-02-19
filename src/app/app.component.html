@@ -1,7 +1,11 @@
 <span class="user-amount">Number of players: {{signalRService.connectionAmount}}</span>
 <span class="refresher">{{refresher}}</span>
 
-<div id="play-area" (keydown)="onKeyDown($event)">
+<div id="play-area" (keydown)="onKeyDown($event)" [ngStyle]="
+  {
+    'width.px': constants.PLAY_AREA_SIZE_X * constants.POSITION_TO_DISPLAY_MULTIPLAYER,
+    'height.px': constants.PLAY_AREA_SIZE_Y * constants.POSITION_TO_DISPLAY_MULTIPLAYER
+  }">
   <div *ngFor="let player of signalRService.players">
     <div class="player" [ngStyle]="
       {
@@ -43,7 +47,12 @@
     </div>
   </div>
 </div>
-<div id="button-container">
+<div id="button-container" [ngStyle]="
+  {
+    'top.px': constants.PLAY_AREA_SIZE_Y * constants.POSITION_TO_DISPLAY_MULTIPLAYER + 25,
+    'width.px': constants.PLAY_AREA_SIZE_X * constants.POSITION_TO_DISPLAY_MULTIPLAYER,
+    'height.px': 200
+  }">
   <button class="movement-button" (click)="go()">↑</button>
   <br/>
   <button class="movement-button" (click)="turnLeft()">←</button>
@@ -59,6 +68,11 @@
     }">Your hit points:</span><strong> {{clientPlayer.hitPoints}} <span *ngIf="clientPlayer.hitPoints <= 0">You're dead!</span></strong></div>
 </div>
 
-<div id="server-control-button-container">
+<div id="server-control-button-container" [ngStyle]="
+  {
+    'top.px': constants.PLAY_AREA_SIZE_Y * constants.POSITION_TO_DISPLAY_MULTIPLAYER + 250,
+    'width.px': constants.PLAY_AREA_SIZE_X * constants.POSITION_TO_DISPLAY_MULTIPLAYER,
+    'height.px': 200
+  }">
   <button (click)="signalRService.broadcastGetObstacles(true)">Generate obstacles</button>
 </div>
