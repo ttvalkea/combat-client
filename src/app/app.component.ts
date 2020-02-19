@@ -6,7 +6,7 @@ import { Player } from './models/Player.model';
 import { Fireball } from './models/Fireball.model';
 import { Constants } from './constants/constants';
 import { Utilities } from './utils/utilities';
-import { OnCollisionAction } from './enums/enums';
+import { OnCollisionAction, MovementState } from './enums/enums';
 
 
 //TODO: Refactor different entities into their own files (Player etc)
@@ -47,6 +47,18 @@ export class AppComponent implements OnInit {
 
     //Refresher makes sure that clients update dom all the time
     setInterval(() => {this.refresher=this.refresher*-1}, Constants.REFRESHER_REFRESH_RATE_MS);
+
+    //Player's movement interval
+    setInterval(() => {
+      switch (this.clientPlayer.movementState) {
+        case MovementState.Forward:
+          this.go();
+          break;
+        case MovementState.Backward:
+          this.goBackwards();
+          break;
+      }
+    }, this.clientPlayer.movementIntervalMs);
   }
 
   private startHttpRequest = () => {
@@ -82,10 +94,10 @@ export class AppComponent implements OnInit {
   onKeyDown(event:KeyboardEvent) {
     switch (event.key) {
       case "ArrowUp":
-        this.go();
+        this.clientPlayer.movementState = this.clientPlayer.movementState === MovementState.Backward ? MovementState.Stopped : MovementState.Forward;
         break;
       case "ArrowDown":
-        this.goBackwards();
+        this.clientPlayer.movementState = this.clientPlayer.movementState === MovementState.Forward ? MovementState.Stopped : MovementState.Backward;
         break;
       case "ArrowLeft":
         this.turnLeft();
