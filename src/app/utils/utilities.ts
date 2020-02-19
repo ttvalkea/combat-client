@@ -13,7 +13,7 @@ export class Utilities {
       case 1:
         return "red";
       case 2:
-        return "blue";
+        return "dodgerblue";
       case 3:
         return "yellow";
       case 4:

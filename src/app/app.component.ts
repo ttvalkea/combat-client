@@ -100,10 +100,10 @@ export class AppComponent implements OnInit {
   onKeyDown(event:KeyboardEvent) {
     switch (event.key) {
       case "ArrowUp":
-        this.clientPlayer.movementState = this.clientPlayer.movementState === MovementState.Backward ? MovementState.Stopped : MovementState.Forward;
+        this.forwardInput();
         break;
       case "ArrowDown":
-        this.clientPlayer.movementState = this.clientPlayer.movementState === MovementState.Forward ? MovementState.Stopped : MovementState.Backward;
+        this.backwardInput();
         break;
       case "ArrowLeft":
         this.turnLeft();
@@ -117,6 +117,14 @@ export class AppComponent implements OnInit {
       default:
         break;
       }
+  }
+
+  forwardInput = () => {
+    this.clientPlayer.movementState = this.clientPlayer.movementState === MovementState.Backward ? MovementState.Stopped : MovementState.Forward;
+  }
+
+  backwardInput = () => {
+    this.clientPlayer.movementState = this.clientPlayer.movementState === MovementState.Forward ? MovementState.Stopped : MovementState.Backward;
   }
 
   turnRight = () => {
