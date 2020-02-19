@@ -19,6 +19,8 @@ import { OnCollisionAction, MovementState } from './enums/enums';
 export class AppComponent implements OnInit {
 
   public clientPlayer: Player = new Player();
+  public manaAmount: number = Constants.PLAYER_STARTING_MANA;
+
   public refresher: number = 1; //This will just flick between 1 and -1 indefinitely, ensuring DOM refreshing.
   public constants = Constants; //This is declared for Angular template to have access to constants
 
@@ -59,6 +61,9 @@ export class AppComponent implements OnInit {
           break;
       }
     }, this.clientPlayer.movementIntervalMs);
+
+    //Player's mana regeneration
+    setInterval(() => { if (this.manaAmount < Constants.PLAYER_STARTING_MANA) this.manaAmount++; }, Constants.PLAYER_MANA_REGENERATION_INTERVAL);
   }
 
   private startHttpRequest = () => {
@@ -75,7 +80,8 @@ export class AppComponent implements OnInit {
   }
 
   public cast = () => {
-    if (this.clientPlayer.hitPoints > 0) {
+    if (this.clientPlayer.hitPoints > 0 && this.manaAmount >= Constants.FIREBALL_MANA_COST) {
+      this.manaAmount -= Constants.FIREBALL_MANA_COST;
       this.signalRService.broadcastFireballDataMessage(new Fireball(
         Utilities.generateId(),
         this.clientPlayer.id,

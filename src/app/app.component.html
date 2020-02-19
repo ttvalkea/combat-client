@@ -62,10 +62,33 @@
   <br/>
   <br/>
   <button class="movement-button" (click)="cast()">Cast</button>
-  <div class="hit-points-indicator"><span [ngStyle]="
-    {
-      'background-color': clientPlayer.playerColor
-    }">Your hit points:</span><strong> {{clientPlayer.hitPoints}} <span *ngIf="clientPlayer.hitPoints <= 0">You're dead!</span></strong></div>
+  <div class="stat-indicators">
+    <div>
+      <span [ngStyle]="
+      {
+        'background-color': clientPlayer.playerColor
+      }">Your hit points:
+      </span><strong> {{clientPlayer.hitPoints}}<span *ngIf="clientPlayer.hitPoints <= 0">You're dead!</span></strong>
+    </div>
+    <div>
+      <span [ngStyle]="
+      {
+        'background-color': 'blue',
+        'color': 'white'
+      }">Your mana:
+      </span><strong> {{manaAmount}}</strong>
+      <div>
+        <span class='mana-bar mana-bar-bottom' [ngStyle]="
+        {
+          'width.px': constants.PLAYER_STARTING_MANA
+        }"></span>
+        <span class='mana-bar mana-bar-top' [ngStyle]="
+        {
+          'width.px': manaAmount
+        }"></span>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div id="server-control-button-container" [ngStyle]="
