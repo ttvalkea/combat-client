@@ -10,6 +10,7 @@ export class Constants {
   public static PLAYER_MOVEMENT_INTERVAL: number = 120;
   public static PLAYER_MANA_REGENERATION_INTERVAL: number = 100;
   public static PLAYER_SCORE_GETTING_INTERVAL: number = 1000;
+  public static PLAYER_KNOCKOUT_DURATION_MS: number = 5000;
 
   public static PLAY_AREA_SIZE_X: number = 75;
   public static PLAY_AREA_SIZE_Y: number = 75;

@@ -38,6 +38,9 @@ export class SignalRService {
 
   private actionsAfterSignalRConnectionStarted = () => {
     console.log('SignalR connection formed.');
+
+    //TODO: Make a getGameState function with all the initial loading.
+    //TODO: Add getWhoIsTag() there.
     this.broadcastGetObstacles(false);
     this.broadcastNewTagItemData();
   }
@@ -146,8 +149,8 @@ export class SignalRService {
     .catch(err => console.error(err));
   }
 
-  public addBroadcastPlayerHitNewTagItemListener = () => {
-    this.hubConnection.on('broadcastPlayerHitNewTagItem', (playerId: string) => {
+  public addBroadcastPlayerBecomesTagListener = () => {
+    this.hubConnection.on('broadcastPlayerBecomesTag', (playerId: string) => {
       this.tagPlayerId = playerId;
     })
   }

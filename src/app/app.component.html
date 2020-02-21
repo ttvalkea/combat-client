@@ -79,7 +79,7 @@
       {
         'background-color': clientPlayer.playerColor
       }">Your hit points:
-      </span><strong> {{clientPlayer.hitPoints}}<span *ngIf="clientPlayer.hitPoints <= 0">You're dead!</span></strong>
+      </span><strong> {{clientPlayer.hitPoints}} <span *ngIf="clientPlayer.hitPoints <= 0">Knocked out!</span></strong>
     </div>
     <div>
       <span [ngStyle]="

@@ -46,7 +46,7 @@ export class AppComponent implements OnInit {
     this.signalRService.addBroadcastFireballHitPlayerMessageListener(this.clientPlayer);
     this.signalRService.addBroadcastGetObstaclesListener();
     this.signalRService.addNewTagListener();
-    this.signalRService.addBroadcastPlayerHitNewTagItemListener();
+    this.signalRService.addBroadcastPlayerBecomesTagListener();
 
     this.startHttpRequest();
 
