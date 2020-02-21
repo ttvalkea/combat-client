@@ -22,6 +22,7 @@ export class SignalRService {
   public obstacles: Obstacle[] = [];
   public tagPlayerId: string; //Id of the player who is currently gaining victory points.
   public tagItem: NewTagItem;
+  public winner: Player;
 
   public startConnection = () => {
     const isProductionEnvironment = environment.production;
@@ -158,5 +159,16 @@ export class SignalRService {
   public broadcastNewTagItemData = () => {
     this.hubConnection.invoke('broadcastNewTagItemData')
     .catch(err => console.error(err));
+  }
+
+  public broadcastPlayerWins = (message: Player) => {
+    this.hubConnection.invoke('broadcastPlayerWins', message)
+    .catch(err => console.error(err));
+  }
+
+  public addBroadcastPlayerWinsListener = () => {
+    this.hubConnection.on('broadcastPlayerWins', (player: Player) => {
+      this.winner = player;
+    })
   }
 }

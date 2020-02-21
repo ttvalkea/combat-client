@@ -6,6 +6,15 @@
     'width.px': constants.PLAY_AREA_SIZE_X * constants.POSITION_TO_DISPLAY_MULTIPLAYER,
     'height.px': constants.PLAY_AREA_SIZE_Y * constants.POSITION_TO_DISPLAY_MULTIPLAYER
   }">
+  <div *ngIf="signalRService.winner">
+    <div class="game-end-banner" [ngStyle]="
+      {
+        'width.px': constants.PLAY_AREA_SIZE_X * constants.POSITION_TO_DISPLAY_MULTIPLAYER,
+        'background-color': signalRService.winner.playerColor
+      }">
+      <span>{{ signalRService.winner.id === clientPlayer.id ? 'You\'re the winner!' : 'You lost.' }}</span>
+    </div>
+  </div>
   <div *ngFor="let player of signalRService.players">
     <div class="player" [ngClass]="(signalRService.tagPlayerId && signalRService.tagPlayerId === player.id) ? 'player-is-tag' : ''" [ngStyle]="
       {

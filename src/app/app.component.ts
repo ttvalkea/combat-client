@@ -47,6 +47,7 @@ export class AppComponent implements OnInit {
     this.signalRService.addBroadcastGetObstaclesListener();
     this.signalRService.addNewTagListener();
     this.signalRService.addBroadcastPlayerBecomesTagListener();
+    this.signalRService.addBroadcastPlayerWinsListener();
 
     this.startHttpRequest();
 
@@ -69,7 +70,14 @@ export class AppComponent implements OnInit {
     setInterval(() => { if (this.manaAmount < Constants.PLAYER_STARTING_MANA) this.manaAmount++; }, Constants.PLAYER_MANA_REGENERATION_INTERVAL);
 
     //Player's scoring interval
-    setInterval(() => { if (this.signalRService.tagPlayerId && this.clientPlayer.id === this.signalRService.tagPlayerId) this.score++; }, Constants.PLAYER_SCORE_GETTING_INTERVAL);
+    setInterval(() => {
+      if (this.signalRService.tagPlayerId && this.clientPlayer.id === this.signalRService.tagPlayerId && !this.signalRService.winner) {
+        this.score++;
+      }
+      if (this.score >= Constants.SCORE_NEEDED_TO_WIN && !this.signalRService.winner) {
+        this.signalRService.broadcastPlayerWins(this.clientPlayer);
+      }
+    }, Constants.PLAYER_SCORE_GETTING_INTERVAL);
   }
 
   private startHttpRequest = () => {
@@ -86,7 +94,7 @@ export class AppComponent implements OnInit {
   }
 
   public cast = () => {
-    if (this.clientPlayer.hitPoints > 0 && this.manaAmount >= Constants.FIREBALL_MANA_COST) {
+    if (this.clientPlayer.hitPoints > 0 && this.manaAmount >= Constants.FIREBALL_MANA_COST && !this.signalRService.winner) {
       this.manaAmount -= Constants.FIREBALL_MANA_COST;
       this.signalRService.broadcastFireballDataMessage(new Fireball(
         Utilities.generateId(),
@@ -147,12 +155,12 @@ export class AppComponent implements OnInit {
     }
   }
   go = () => {
-    if (this.clientPlayer.hitPoints > 0) {
+    if (this.clientPlayer.hitPoints > 0 && !this.signalRService.winner) {
       this.clientPlayer.move(this.clientPlayer, this.clientPlayer.direction, this.postMovementAction, OnCollisionAction.Stop, this.signalRService.obstacles);
     }
   }
   goBackwards = () => {
-    if (this.clientPlayer.hitPoints > 0) {
+    if (this.clientPlayer.hitPoints > 0 && !this.signalRService.winner) {
       this.clientPlayer.move(this.clientPlayer, this.clientPlayer.direction-180, this.postMovementAction, OnCollisionAction.Stop, this.signalRService.obstacles);
       this.clientPlayer.direction += 180;
     }

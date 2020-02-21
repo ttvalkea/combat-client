@@ -89,3 +89,9 @@
 .mana-bar-bottom {
   background-color: black;
 }
+.game-end-banner {
+  position: absolute;
+  top: 100px;
+  text-align: center;
+  font-size: 200%;
+}
