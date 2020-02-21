@@ -44,6 +44,8 @@ export class AppComponent implements OnInit {
     this.signalRService.addBroadcastFireballDataMessageListener(this.clientPlayer);
     this.signalRService.addBroadcastFireballHitPlayerMessageListener(this.clientPlayer);
     this.signalRService.addBroadcastGetObstaclesListener();
+    this.signalRService.addNewTagListener();
+    this.signalRService.addBroadcastPlayerHitNewTagItemListener();
 
     this.startHttpRequest();
 
@@ -142,13 +144,24 @@ export class AppComponent implements OnInit {
   }
   go = () => {
     if (this.clientPlayer.hitPoints > 0) {
-      this.clientPlayer.move(this.clientPlayer, this.clientPlayer.direction, this.sendPlayerData, OnCollisionAction.Stop, this.signalRService.obstacles);
+      this.clientPlayer.move(this.clientPlayer, this.clientPlayer.direction, this.postMovementAction, OnCollisionAction.Stop, this.signalRService.obstacles);
     }
   }
   goBackwards = () => {
     if (this.clientPlayer.hitPoints > 0) {
-      this.clientPlayer.move(this.clientPlayer, this.clientPlayer.direction-180, this.sendPlayerData, OnCollisionAction.Stop, this.signalRService.obstacles);
+      this.clientPlayer.move(this.clientPlayer, this.clientPlayer.direction-180, this.postMovementAction, OnCollisionAction.Stop, this.signalRService.obstacles);
       this.clientPlayer.direction += 180;
+    }
+  }
+
+  postMovementAction = () => {
+    this.checkForCollisionWithNewTagItem();
+    this.sendPlayerData();
+  }
+
+  checkForCollisionWithNewTagItem = () => {
+    if (this.signalRService.tagItem && this.signalRService.tagItem.isInPlay) {
+      Utilities.doItemCollision(this.clientPlayer, [this.signalRService.tagItem], () => { this.signalRService.broadcastPlayerHitNewTagItem(this.clientPlayer.id); });
     }
   }
 }

@@ -46,12 +46,23 @@
       <span></span>
     </div>
   </div>
+  <div *ngIf="signalRService.tagItem && signalRService.tagItem.isInPlay">
+    <div class="tag-item" [ngStyle]="
+      {
+        'margin-top.px': signalRService.tagItem.positionY*constants.POSITION_TO_DISPLAY_MULTIPLAYER,
+        'margin-left.px': signalRService.tagItem.positionX*constants.POSITION_TO_DISPLAY_MULTIPLAYER,
+        'width.px': signalRService.tagItem.sizeX*constants.POSITION_TO_DISPLAY_MULTIPLAYER,
+        'height.px': signalRService.tagItem.sizeY*constants.POSITION_TO_DISPLAY_MULTIPLAYER
+      }">
+      <span>★</span>
+    </div>
+  </div>
 </div>
 <div id="button-container" [ngStyle]="
   {
     'top.px': constants.PLAY_AREA_SIZE_Y * constants.POSITION_TO_DISPLAY_MULTIPLAYER + 25,
     'width.px': constants.PLAY_AREA_SIZE_X * constants.POSITION_TO_DISPLAY_MULTIPLAYER,
-    'height.px': 200
+    'height.px': 175
   }">
   <button class="movement-button" (click)="forwardInput()">↑</button>
   <br/>
@@ -93,9 +104,9 @@
 
 <div id="server-control-button-container" [ngStyle]="
   {
-    'top.px': constants.PLAY_AREA_SIZE_Y * constants.POSITION_TO_DISPLAY_MULTIPLAYER + 250,
+    'top.px': constants.PLAY_AREA_SIZE_Y * constants.POSITION_TO_DISPLAY_MULTIPLAYER + 225,
     'width.px': constants.PLAY_AREA_SIZE_X * constants.POSITION_TO_DISPLAY_MULTIPLAYER,
-    'height.px': 200
+    'height.px': 30
   }">
   <button (click)="signalRService.broadcastGetObstacles(true)">Generate obstacles</button>
 </div>

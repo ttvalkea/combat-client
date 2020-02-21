@@ -8,6 +8,7 @@ import { OnCollisionAction } from '../enums/enums';
 import { ItemBase } from '../models/ItemBase.model';
 import { FireballHitPlayerData } from '../models/FireballHitPlayerData.model';
 import { Utilities } from '../utils/utilities';
+import { NewTagItem } from '../models/NewTagItem.model';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +20,8 @@ export class SignalRService {
   public players: Player[] = [];
   public fireballs: Fireball[] = [];
   public obstacles: Obstacle[] = [];
+  public tagPlayerId: string; //Id of the player who is currently gaining victory points.
+  public tagItem: NewTagItem;
 
   public startConnection = () => {
     const isProductionEnvironment = environment.production;
@@ -36,6 +39,7 @@ export class SignalRService {
   private actionsAfterSignalRConnectionStarted = () => {
     console.log('SignalR connection formed.');
     this.broadcastGetObstacles(false);
+    this.broadcastNewTagItemData();
   }
 
   public addBroadcastConnectionAmountDataListener = (playerInfoFunction: Function) => {
@@ -121,7 +125,6 @@ export class SignalRService {
   }
 
   public broadcastGetObstacles = (generateNewObstacles: boolean) => {
-    console.log('broadcastGetObstacles')
     this.hubConnection.invoke('broadcastGetObstacles', generateNewObstacles)
     .catch(err => console.error(err));
   }
@@ -130,5 +133,27 @@ export class SignalRService {
     this.hubConnection.on('broadcastGetObstacles', (data: Obstacle[]) => {
       this.obstacles = data;
     })
+  }
+
+  public addNewTagListener = () => {
+    this.hubConnection.on('newTag', (newTagItem: NewTagItem) => {
+      this.tagItem = newTagItem;
+    })
+  }
+
+  public broadcastPlayerHitNewTagItem = (playerId: string) => {
+    this.hubConnection.invoke('broadcastPlayerHitNewTagItem', playerId)
+    .catch(err => console.error(err));
+  }
+
+  public addBroadcastPlayerHitNewTagItemListener = () => {
+    this.hubConnection.on('broadcastPlayerHitNewTagItem', (playerId: string) => {
+      this.tagPlayerId = playerId;
+    })
+  }
+
+  public broadcastNewTagItemData = () => {
+    this.hubConnection.invoke('broadcastNewTagItemData')
+    .catch(err => console.error(err));
   }
 }
