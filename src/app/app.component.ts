@@ -20,6 +20,7 @@ export class AppComponent implements OnInit {
 
   public clientPlayer: Player = new Player();
   public manaAmount: number = Constants.PLAYER_STARTING_MANA;
+  public score: number = 0;
 
   public refresher: number = 1; //This will just flick between 1 and -1 indefinitely, ensuring DOM refreshing.
   public constants = Constants; //This is declared for Angular template to have access to constants
@@ -66,6 +67,9 @@ export class AppComponent implements OnInit {
 
     //Player's mana regeneration
     setInterval(() => { if (this.manaAmount < Constants.PLAYER_STARTING_MANA) this.manaAmount++; }, Constants.PLAYER_MANA_REGENERATION_INTERVAL);
+
+    //Player's scoring interval
+    setInterval(() => { if (this.signalRService.tagPlayerId && this.clientPlayer.id === this.signalRService.tagPlayerId) this.score++; }, Constants.PLAYER_SCORE_GETTING_INTERVAL);
   }
 
   private startHttpRequest = () => {

@@ -7,7 +7,7 @@
     'height.px': constants.PLAY_AREA_SIZE_Y * constants.POSITION_TO_DISPLAY_MULTIPLAYER
   }">
   <div *ngFor="let player of signalRService.players">
-    <div class="player" [ngStyle]="
+    <div class="player" [ngClass]="(signalRService.tagPlayerId && signalRService.tagPlayerId === player.id) ? 'player-is-tag' : ''" [ngStyle]="
       {
         'margin-top.px': player.positionY*constants.POSITION_TO_DISPLAY_MULTIPLAYER,
         'margin-left.px': player.positionX*constants.POSITION_TO_DISPLAY_MULTIPLAYER,
@@ -21,7 +21,7 @@
           'transform': 'rotate(' + clientPlayer.direction + 'deg)'
         }
       ">--></span>
-      <span>{{player.hitPoints}}</span>
+      <span>{{player.hitPoints}}<span *ngIf="signalRService.tagPlayerId && signalRService.tagPlayerId === player.id">★</span></span>
     </div>
   </div>
   <div *ngFor="let fireball of signalRService.fireballs">
@@ -86,18 +86,23 @@
       {
         'background-color': 'blue',
         'color': 'white'
-      }">Your mana:
+      }">Your energy:
       </span><strong> {{manaAmount}}</strong>
       <div>
         <span class='mana-bar mana-bar-bottom' [ngStyle]="
         {
-          'width.px': constants.PLAYER_STARTING_MANA
+          'width.px': constants.PLAYER_STARTING_MANA * 1.5
         }"></span>
         <span class='mana-bar mana-bar-top' [ngStyle]="
         {
-          'width.px': manaAmount
+          'width.px': manaAmount * 1.5
         }"></span>
       </div>
+    </div>
+    <br>
+    <br>
+    <div>
+      <span>Your score: </span><strong> {{score}} / {{constants.SCORE_NEEDED_TO_WIN}}</strong>
     </div>
   </div>
 </div>

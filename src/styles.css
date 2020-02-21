@@ -23,7 +23,9 @@
 .movement-button {
   padding: 8px;
 }
-
+.player-is-tag {
+  border: 3px dashed white !important;
+}
 .player {
   position: absolute;
   border-radius: 15px;
@@ -66,6 +68,7 @@
   position: absolute;
   top: 10px;
   text-align: left;
+  font-size: 150%;
 }
 
 .refresher {
@@ -86,4 +89,3 @@
 .mana-bar-bottom {
   background-color: black;
 }
-

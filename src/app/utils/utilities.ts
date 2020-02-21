@@ -8,14 +8,14 @@ import { Constants } from '../constants/constants';
 export class Utilities {
 
   public static getRandomPlayerColor = () => {
-    const colorNumber = Utilities.getRandomNumber(1, 12);
+    const colorNumber = Utilities.getRandomNumber(1, 18);
     switch (colorNumber) {
       case 1:
         return "red";
       case 2:
         return "dodgerblue";
       case 3:
-        return "yellow";
+        return "burlywood";
       case 4:
         return "cyan";
       case 5:
@@ -25,15 +25,15 @@ export class Utilities {
       case 7:
         return "violet";
       case 8:
-        return "white";
+        return "silver";
       case 9:
         return "orange";
       case 10:
-        return "lightblue";
+        return "mediumslateblue";
       case 11:
         return "olive";
       case 12:
-        return "azure";
+        return "turquoise";
       case 13:
         return "lightcoral";
       case 14:
@@ -45,7 +45,7 @@ export class Utilities {
       case 17:
         return "palegreen";
       case 18:
-        return "cornsilk";
+        return "lightskyblue";
     }
   }
 
