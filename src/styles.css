@@ -94,4 +94,5 @@
   top: 100px;
   text-align: center;
   font-size: 200%;
+  z-index: 1000;
 }

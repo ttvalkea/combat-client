@@ -20,5 +20,5 @@ export class Constants {
   public static FIREBALL_MOVEMENT_INTERVAL: number = 60;
   public static FIREBALL_MANA_COST: number = 15;
 
-  public static SCORE_NEEDED_TO_WIN: number = 10;
+  public static SCORE_NEEDED_TO_WIN: number = 60;
 }
