@@ -133,9 +133,10 @@ export class SignalRService {
     .catch(err => console.error(err));
   }
 
-  public addBroadcastGetObstaclesListener = () => {
+  public addBroadcastGetObstaclesListener = (functionAfterSettingObstacles: Function) => {
     this.hubConnection.on('broadcastGetObstacles', (data: Obstacle[]) => {
       this.obstacles = data;
+      functionAfterSettingObstacles();
     })
   }
 

@@ -20,31 +20,34 @@ export class AppComponent implements OnInit {
 
   public clientPlayer: Player = new Player();
   public manaAmount: number = Constants.PLAYER_STARTING_MANA;
-  public score: number = 0;
 
   public refresher: number = 1; //This will just flick between 1 and -1 indefinitely, ensuring DOM refreshing.
   public constants = Constants; //This is declared for Angular template to have access to constants
 
+  public showInstructions: boolean = true;
+  public hasPlayerStartingPositionBeenSet: boolean = false;
+
   constructor(public signalRService: SignalRService, private http: HttpClient) {
     this.clientPlayer.id = Utilities.generateId();
-    this.clientPlayer.positionX = Utilities.getRandomNumber(1, 40);
-    this.clientPlayer.positionY = Utilities.getRandomNumber(1, 40);
     this.clientPlayer.playerName = 'A';
     this.clientPlayer.playerColor = Utilities.getRandomPlayerColor();
     this.clientPlayer.sizeX = Constants.PLAYER_SIZE_X;
     this.clientPlayer.sizeY = Constants.PLAYER_SIZE_Y;
     this.clientPlayer.hitPoints = Constants.PLAYER_STARTING_HIT_POINTS;
     this.clientPlayer.direction = 0;
+    this.clientPlayer.score = 0;
+    this.clientPlayer.positionX = 0;
+    this.clientPlayer.positionY = 0;
   }
 
   ngOnInit() {
     this.signalRService.startConnection();
 
-    this.signalRService.addBroadcastConnectionAmountDataListener(this.sendPlayerData);
+    this.signalRService.addBroadcastConnectionAmountDataListener(this.broadcastPlayerData);
     this.signalRService.addBroadcastPlayerDataMessageListener();
     this.signalRService.addBroadcastFireballDataMessageListener(this.clientPlayer);
     this.signalRService.addBroadcastFireballHitPlayerMessageListener(this.clientPlayer);
-    this.signalRService.addBroadcastGetObstaclesListener();
+    this.signalRService.addBroadcastGetObstaclesListener(this.setStartingPosition);
     this.signalRService.addNewTagListener();
     this.signalRService.addBroadcastPlayerBecomesTagListener();
     this.signalRService.addBroadcastPlayerWinsListener();
@@ -72,9 +75,10 @@ export class AppComponent implements OnInit {
     //Player's scoring interval
     setInterval(() => {
       if (this.signalRService.tagPlayerId && this.clientPlayer.id === this.signalRService.tagPlayerId && !this.signalRService.winner) {
-        this.score++;
+        this.clientPlayer.score++;
+        this.broadcastPlayerData();
       }
-      if (this.score >= Constants.SCORE_NEEDED_TO_WIN && !this.signalRService.winner) {
+      if (this.clientPlayer.score >= Constants.SCORE_NEEDED_TO_WIN && !this.signalRService.winner) {
         this.signalRService.broadcastPlayerWins(this.clientPlayer);
       }
     }, Constants.PLAYER_SCORE_GETTING_INTERVAL);
@@ -89,7 +93,26 @@ export class AppComponent implements OnInit {
       })
   }
 
-  public sendPlayerData = () => {
+  public setStartingPosition = () => {
+    if (!this.hasPlayerStartingPositionBeenSet) {
+      let isPositionOk = false;
+
+      while (!isPositionOk) {
+        this.clientPlayer.positionX = Utilities.getRandomNumber(0, Constants.PLAY_AREA_SIZE_X-this.clientPlayer.sizeX);
+        this.clientPlayer.positionY = Utilities.getRandomNumber(0, Constants.PLAY_AREA_SIZE_Y-this.clientPlayer.sizeY);
+        isPositionOk = true;
+        console.log(this.clientPlayer)
+        console.log(this.signalRService.obstacles)
+        Utilities.doItemCollision(this.clientPlayer, this.signalRService.obstacles, () => {
+          isPositionOk = false;
+        });
+      }
+      this.broadcastPlayerData();
+      this.hasPlayerStartingPositionBeenSet = true;
+    }
+  }
+
+  public broadcastPlayerData = () => {
     this.signalRService.broadcastPlayerDataMessage(this.clientPlayer);
   }
 
@@ -168,7 +191,7 @@ export class AppComponent implements OnInit {
 
   postMovementAction = () => {
     this.checkForCollisionWithNewTagItem();
-    this.sendPlayerData();
+    this.broadcastPlayerData();
   }
 
   checkForCollisionWithNewTagItem = () => {

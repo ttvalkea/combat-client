@@ -9,12 +9,13 @@
   background-image: linear-gradient(#494, #4b4);
 }
 
-#button-container {
+.button-container {
   position: absolute;
-  background: gray;
+  background: #ccc;
   text-align: center;
+  padding: 0 5px 0 5px;
 }
-#server-control-button-container {
+.server-control-button-container {
   position: absolute;
   background: #444;
   text-align: right;
@@ -95,4 +96,12 @@
   text-align: center;
   font-size: 200%;
   z-index: 1000;
+}
+.float-right {
+  text-align: right;
+}
+.instructions {
+  position: absolute;
+  border: 1px solid black;
+  padding: 0 5px 0 5px;
 }

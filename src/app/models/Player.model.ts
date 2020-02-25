@@ -9,9 +9,10 @@ export class Player extends ItemBase {
   takeDamage: Function = takeDamage;
   movementState: MovementState = MovementState.Stopped;
   movementIntervalMs: number = Constants.PLAYER_MOVEMENT_INTERVAL;
+  score: number;
 };
 
-const takeDamage = (player: Player, amount: number, sendPlayerDataFunction: Function) => {
+const takeDamage = (player: Player, amount: number, broadcastPlayerDataFunction: Function) => {
   if (player.hitPoints > 0) {
     player.hitPoints -= amount;
 
@@ -22,9 +23,9 @@ const takeDamage = (player: Player, amount: number, sendPlayerDataFunction: Func
 
         //TODO: Add a short period of invincibility after being revived
 
-        sendPlayerDataFunction(player);
+        broadcastPlayerDataFunction(player);
       }, Constants.PLAYER_KNOCKOUT_DURATION_MS);
     }
-    sendPlayerDataFunction(player);
+    broadcastPlayerDataFunction(player);
   }
 }
