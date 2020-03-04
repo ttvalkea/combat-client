@@ -1,0 +1,54 @@
+.play-area {
+  position: absolute;
+  background-image: linear-gradient(#494, #4b4);
+}
+
+.fireball {
+  position: absolute;
+  border-radius: 15px;
+  text-align: center;
+  background-image: linear-gradient(red, yellow);
+}
+
+.tag-item {
+  position: absolute;
+  border-radius: 15px;
+  text-align: center;
+  animation-name: tag-item-animation;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+  border: 2px dashed white;
+  color: #fa0;
+}
+
+@keyframes tag-item-animation {
+  from {background-color: #fff;}
+  to {background-color: #0f0;}
+}
+
+.obstacle {
+  position: absolute;
+  border-radius: 5px;
+  background-image: linear-gradient(#666, #333);
+}
+
+.game-end-banner {
+  position: absolute;
+  top: 100px;
+  text-align: center;
+  font-size: 200%;
+  z-index: 1000;
+}
+
+.player-is-tag {
+  border: 3px dashed white !important;
+}
+
+.player {
+  position: absolute;
+  border-radius: 15px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}

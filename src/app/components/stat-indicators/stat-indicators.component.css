@@ -1,0 +1,27 @@
+.button-container {
+  position: absolute;
+  background: #ccc;
+  text-align: center;
+  padding: 0 5px 0 5px;
+}
+
+.stat-indicators {
+  position: absolute;
+  top: 10px;
+  text-align: left;
+  font-size: 150%;
+}
+
+.mana-bar,
+.mana-bar-bottom {
+  position: absolute;
+  height: 15px
+}
+
+.mana-bar-top {
+  background-color: blue;
+}
+
+.mana-bar-bottom {
+  background-color: black;
+}

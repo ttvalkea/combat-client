@@ -1,0 +1,19 @@
+<div class="instructions" [ngStyle]="
+{
+  'left.px': constants.PLAY_AREA_SIZE_X * constants.POSITION_TO_DISPLAY_MULTIPLAYER + 30
+}">
+  <button (click)="showInstructions = !showInstructions">{{showInstructions ? 'Hide' : 'Show'}} instructions</button>
+  <div *ngIf="showInstructions">
+    <h1>Instructions</h1>
+    <p>This is a game of tag. Whenever you're the tag, you'll get points. When you reach {{constants.SCORE_NEEDED_TO_WIN}} points, you win!</p>
+    <p>To become the tag, grab the blinking circle with a star inside it. You also become the tag by knocking out the player who is currently the tag.</p>
+    <h2>Controls</h2>
+    <p><strong>Up arrow</strong>: Start moving (or stop if moving backwards)</p>
+    <p><strong>Down arrow</strong>: Start moving backwards (or stop if moving forward)</p>
+    <p><strong>Left and right arrow</strong>: Turn your direction left or right</p>
+    <p><strong>Ctrl</strong>: Shoot a fireball</p>
+    <p>When you hit an opponent with a fireball, they take one damage. Once hit five times, a player will be knocked out for a brief moment before being back in action.</p>
+    <p>Flinging a fireball takes energy and you can't do it unless you have enough energy. You regenerate energy automatically.</p>
+
+  </div>
+</div>

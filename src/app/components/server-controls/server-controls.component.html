@@ -1,0 +1,8 @@
+<div class="server-control-button-container" [ngStyle]="
+  {
+    'top.px': constants.PLAY_AREA_SIZE_Y * constants.POSITION_TO_DISPLAY_MULTIPLAYER + 130,
+    'width.px': constants.PLAY_AREA_SIZE_X * constants.POSITION_TO_DISPLAY_MULTIPLAYER,
+    'height.px': 30
+  }">
+  <button (click)="signalRService.broadcastGetObstacles(true)">Generate obstacles</button>
+</div>

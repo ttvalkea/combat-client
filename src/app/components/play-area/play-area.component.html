@@ -1,0 +1,67 @@
+<div class="play-area" (keydown)="onKeyDown($event)" [ngStyle]="
+  {
+    'width.px': constants.PLAY_AREA_SIZE_X * constants.POSITION_TO_DISPLAY_MULTIPLAYER,
+    'height.px': constants.PLAY_AREA_SIZE_Y * constants.POSITION_TO_DISPLAY_MULTIPLAYER
+  }">
+  <div *ngIf="signalRService.winner">
+    <div class="game-end-banner" [ngStyle]="
+      {
+        'width.px': constants.PLAY_AREA_SIZE_X * constants.POSITION_TO_DISPLAY_MULTIPLAYER,
+        'background-color': signalRService.winner.playerColor
+      }">
+      <span>{{ signalRService.winner.id === clientPlayer.id ? 'You\'re the winner!' : 'You lost.' }}</span>
+    </div>
+  </div>
+  <div *ngFor="let player of signalRService.players">
+    <div class="player" [ngClass]="(signalRService.tagPlayerId && signalRService.tagPlayerId === player.id) ? 'player-is-tag' : ''" [ngStyle]="
+      {
+        'margin-top.px': player.positionY*constants.POSITION_TO_DISPLAY_MULTIPLAYER,
+        'margin-left.px': player.positionX*constants.POSITION_TO_DISPLAY_MULTIPLAYER,
+        'background': player.hitPoints > 0 ? player.playerColor : '#333',
+        'border': '1px solid ' + player.playerColor,
+        'width.px': player.sizeX*constants.POSITION_TO_DISPLAY_MULTIPLAYER,
+        'height.px': player.sizeY*constants.POSITION_TO_DISPLAY_MULTIPLAYER
+      }">
+      <span>{{player.score}}/{{constants.SCORE_NEEDED_TO_WIN}}<span *ngIf="signalRService.tagPlayerId && signalRService.tagPlayerId === player.id">★</span></span>
+      <span *ngIf="player.id === clientPlayer.id" [ngStyle]="
+        {
+          'transform': 'rotate(' + clientPlayer.direction + 'deg)'
+        }
+      ">--></span>
+      <span>{{player.hitPoints}}hp</span>
+    </div>
+  </div>
+  <div *ngFor="let fireball of signalRService.fireballs">
+    <div class="fireball" [ngStyle]="
+      {
+        'margin-top.px': fireball.positionY*constants.POSITION_TO_DISPLAY_MULTIPLAYER,
+        'margin-left.px': fireball.positionX*constants.POSITION_TO_DISPLAY_MULTIPLAYER,
+        'width.px': fireball.sizeX*constants.POSITION_TO_DISPLAY_MULTIPLAYER,
+        'height.px': fireball.sizeY*constants.POSITION_TO_DISPLAY_MULTIPLAYER
+      }">
+      <span>O</span>
+    </div>
+  </div>
+  <div *ngFor="let obstacle of signalRService.obstacles">
+    <div class="obstacle" [ngStyle]="
+      {
+        'margin-top.px': obstacle.positionY*constants.POSITION_TO_DISPLAY_MULTIPLAYER,
+        'margin-left.px': obstacle.positionX*constants.POSITION_TO_DISPLAY_MULTIPLAYER,
+        'width.px': obstacle.sizeX*constants.POSITION_TO_DISPLAY_MULTIPLAYER,
+        'height.px': obstacle.sizeY*constants.POSITION_TO_DISPLAY_MULTIPLAYER
+      }">
+      <span></span>
+    </div>
+  </div>
+  <div *ngIf="signalRService.tagItem && signalRService.tagItem.isInPlay">
+    <div class="tag-item" [ngStyle]="
+      {
+        'margin-top.px': signalRService.tagItem.positionY*constants.POSITION_TO_DISPLAY_MULTIPLAYER,
+        'margin-left.px': signalRService.tagItem.positionX*constants.POSITION_TO_DISPLAY_MULTIPLAYER,
+        'width.px': signalRService.tagItem.sizeX*constants.POSITION_TO_DISPLAY_MULTIPLAYER,
+        'height.px': signalRService.tagItem.sizeY*constants.POSITION_TO_DISPLAY_MULTIPLAYER
+      }">
+      <span>★</span>
+    </div>
+  </div>
+</div>

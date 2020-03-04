@@ -9,6 +9,7 @@ import { ItemBase } from '../models/ItemBase.model';
 import { FireballHitPlayerData } from '../models/FireballHitPlayerData.model';
 import { Utilities } from '../utils/utilities';
 import { NewTagItem } from '../models/NewTagItem.model';
+import { PlayerActions } from '../classes/playerActions';
 
 @Injectable({
   providedIn: 'root'
@@ -40,19 +41,18 @@ export class SignalRService {
   private actionsAfterSignalRConnectionStarted = () => {
     console.log('SignalR connection formed.');
 
-    //TODO: Make a getGameState function with all the initial loading.
     //TODO: Add getWhoIsTag() there.
     this.broadcastGetObstacles(false);
     this.broadcastNewTagItemData();
   }
 
-  public addBroadcastConnectionAmountDataListener = (playerInfoFunction: Function) => {
+  public addBroadcastConnectionAmountDataListener = (player: Player) => {
     this.hubConnection.on('broadcastconnectionamountdata', (data) => {
       this.connectionAmount = data;
 
       //This player receives other player's data when entering the game
       this.players = [];
-      playerInfoFunction();
+      PlayerActions.broadcastPlayerData(player, this);
     })
   }
 
@@ -77,7 +77,7 @@ export class SignalRService {
       this.fireballs = this.fireballs.filter(fireball => fireball.id !== data.fireballId);
 
       if (listeningPlayer.id === data.playerId) {
-        listeningPlayer.takeDamage(listeningPlayer, 1, this.broadcastPlayerDataMessage);
+        PlayerActions.takeDamage(listeningPlayer, 1, this.broadcastPlayerDataMessage);
       }
     })
   }
@@ -105,17 +105,16 @@ export class SignalRService {
     this.hubConnection.on('broadcastFireballDataMessage', (fireball: Fireball) => {
 
       //Server can't return the move function, so it's reassigned here
-      fireball.move = new ItemBase().move;
+      fireball.move = Utilities.angledMoveFunction;
       this.fireballs.push(fireball);
       //Fireball's movement
       const interval = setInterval(() => {
         if (!fireball.isDestroyed) {
-          fireball.move(fireball, fireball.direction, () => {}, OnCollisionAction.Destroy, this.obstacles);
+          fireball.move(fireball, this, fireball.direction, () => {}, OnCollisionAction.Destroy, this.obstacles);
 
           //Only the player, who cast the fireball, makes collision checks and broadcasts them to everyone
           if (fireball.casterId === listeningPlayer.id) {
             this.getFireballWithPlayersCollisions(fireball);
-            console.log()
           }
 
           if (fireball.isDestroyed) {
@@ -133,10 +132,10 @@ export class SignalRService {
     .catch(err => console.error(err));
   }
 
-  public addBroadcastGetObstaclesListener = (functionAfterSettingObstacles: Function) => {
+  public addBroadcastGetObstaclesListener = (player: Player) => {
     this.hubConnection.on('broadcastGetObstacles', (data: Obstacle[]) => {
       this.obstacles = data;
-      functionAfterSettingObstacles();
+      PlayerActions.setStartingPosition(player, this);
     })
   }
 

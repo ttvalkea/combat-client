@@ -3,7 +3,7 @@ import { ItemBase } from '../models/ItemBase.model';
 import { OnCollisionAction } from '../enums/enums';
 import { Obstacle } from '../models/Obstacle.model';
 import { Constants } from '../constants/constants';
-
+import { SignalRService } from '../services/signal-r.service';
 
 export class Utilities {
 
@@ -79,7 +79,7 @@ export class Utilities {
     }
   }
 
-  public static angledMoveFunction = (mover, direction: number, postMovementAction: Function, onCollisionAction: OnCollisionAction = OnCollisionAction.Stop, obstacles: Obstacle[] = []) => {
+  public static angledMoveFunction = (mover: any, signalRService: SignalRService, direction: number, postMovementAction: Function, onCollisionAction: OnCollisionAction = OnCollisionAction.Stop, obstacles: Obstacle[] = []) => {
 
     mover.direction = direction;
     const xAndYIncrement = Utilities.getXAndYIncrementsByAngle(direction);
@@ -130,6 +130,6 @@ export class Utilities {
         mover.positionY = 0;
       }
     }
-    postMovementAction();
+    postMovementAction(mover, signalRService);
   }
 }

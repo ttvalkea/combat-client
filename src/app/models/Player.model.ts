@@ -1,31 +1,25 @@
 import { ItemBase } from './ItemBase.model';
 import { MovementState } from '../enums/enums';
 import { Constants } from '../constants/constants';
+import { Utilities } from '../utils/utilities';
 
 export class Player extends ItemBase {
-  playerName: string;
-  playerColor: string;
-  hitPoints: number;
-  takeDamage: Function = takeDamage;
+  playerColor: string = Utilities.getRandomPlayerColor();
+  hitPoints: number = Constants.PLAYER_STARTING_HIT_POINTS;
   movementState: MovementState = MovementState.Stopped;
   movementIntervalMs: number = Constants.PLAYER_MOVEMENT_INTERVAL;
-  score: number;
+  score: number = 0
+  manaAmount: number = Constants.PLAYER_STARTING_MANA;
+  hasPlayerStartingPositionBeenSet: boolean = false;
+
+  constructor() {
+    super();
+    this.id = Utilities.generateId();
+    this.sizeX = Constants.PLAYER_SIZE_X;
+    this.sizeY = Constants.PLAYER_SIZE_Y;
+    this.direction = 0;
+    this.positionX = 0;
+    this.positionY = 0;
+  }
 };
 
-const takeDamage = (player: Player, amount: number, broadcastPlayerDataFunction: Function) => {
-  if (player.hitPoints > 0) {
-    player.hitPoints -= amount;
-
-    if (player.hitPoints <= 0) {
-      //Players are knocked out only for moment
-      setTimeout(() => {
-        player.hitPoints = Constants.PLAYER_STARTING_HIT_POINTS;
-
-        //TODO: Add a short period of invincibility after being revived
-
-        broadcastPlayerDataFunction(player);
-      }, Constants.PLAYER_KNOCKOUT_DURATION_MS);
-    }
-    broadcastPlayerDataFunction(player);
-  }
-}

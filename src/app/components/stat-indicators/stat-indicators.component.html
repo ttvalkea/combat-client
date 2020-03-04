@@ -1,0 +1,40 @@
+<div class="button-container" [ngStyle]="
+  {
+    'top.px': constants.PLAY_AREA_SIZE_Y * constants.POSITION_TO_DISPLAY_MULTIPLAYER + 25,
+    'width.px': constants.PLAY_AREA_SIZE_X * constants.POSITION_TO_DISPLAY_MULTIPLAYER - 10,
+    'height.px': 100
+  }">
+  <div class="stat-indicators">
+    <div>
+      <span [ngStyle]="
+      {
+        'background-color': clientPlayer.playerColor
+      }">Your hit points:
+      </span><strong> {{clientPlayer.hitPoints}} <span *ngIf="clientPlayer.hitPoints <= 0">Knocked out!</span></strong>
+    </div>
+    <div>
+      <span [ngStyle]="
+      {
+        'background-color': 'blue',
+        'color': 'white'
+      }">Your energy:
+      </span><strong> {{clientPlayer.manaAmount}}</strong>
+      <div>
+        <span class='mana-bar mana-bar-bottom' [ngStyle]="
+        {
+          'width.px': constants.PLAYER_STARTING_MANA * 1.5
+        }"></span>
+        <span class='mana-bar mana-bar-top' [ngStyle]="
+        {
+          'width.px': clientPlayer.manaAmount * 1.5
+        }"></span>
+      </div>
+    </div>
+    <div class="align-right" [ngStyle]="
+    {
+      'width.px': constants.PLAY_AREA_SIZE_X * constants.POSITION_TO_DISPLAY_MULTIPLAYER - 10
+    }">
+      <span>Your score: </span><strong> {{clientPlayer.score}} / {{constants.SCORE_NEEDED_TO_WIN}}</strong>
+    </div>
+  </div>
+</div>
