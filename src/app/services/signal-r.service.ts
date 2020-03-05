@@ -4,12 +4,10 @@ import { environment } from '../../environments/environment';
 import { Player } from '../models/Player.model';
 import { Fireball } from '../models/Fireball.model';
 import { Obstacle } from '../models/Obstacle.model';
-import { OnCollisionAction } from '../enums/enums';
-import { ItemBase } from '../models/ItemBase.model';
 import { FireballHitPlayerData } from '../models/FireballHitPlayerData.model';
-import { Utilities } from '../utils/utilities';
 import { NewTagItem } from '../models/NewTagItem.model';
 import { PlayerActions } from '../classes/playerActions';
+import { FireballActions } from '../classes/fireballActions';
 
 @Injectable({
   providedIn: 'root'
@@ -41,9 +39,9 @@ export class SignalRService {
   private actionsAfterSignalRConnectionStarted = () => {
     console.log('SignalR connection formed.');
 
-    //TODO: Add getWhoIsTag() there.
     this.broadcastGetObstacles(false);
     this.broadcastNewTagItemData();
+    this.broadcastGetTagPlayerId();
   }
 
   public addBroadcastConnectionAmountDataListener = (player: Player) => {
@@ -67,6 +65,12 @@ export class SignalRService {
     })
   }
 
+  // Updates a player's data if it's already in the players array or adds a new player
+  private updatePlayerData = (playerData: Player) => {
+    this.players = this.players.filter(player => player.id !== playerData.id);
+    this.players.push(playerData);
+  }
+
   public broadcastFireballHitPlayerMessage = (fireball: Fireball, player: Player) => {
     this.hubConnection.invoke('broadcastFireballHitPlayerMessage', fireball, player)
     .catch(err => console.error(err));
@@ -82,48 +86,15 @@ export class SignalRService {
     })
   }
 
-  // Updates a player's data if it's already in the players array or adds a new player
-  private updatePlayerData = (playerData: Player) => {
-    this.players = this.players.filter(player => player.id !== playerData.id);
-    this.players.push(playerData);
-  }
-
   public broadcastFireballDataMessage = (message: Fireball) => {
     this.hubConnection.invoke('broadcastFireballDataMessage', message)
     .catch(err => console.error(err));
   }
 
-  private getFireballWithPlayersCollisions = (fireball: Fireball) => {
-    const playersOtherThanCaster = this.players.filter(player => player.id !== fireball.casterId);
-    Utilities.doItemCollision(fireball, playersOtherThanCaster, (collidedPlayer) => {
-      this.broadcastFireballHitPlayerMessage(fireball, collidedPlayer);
-      fireball.isDestroyed = true;
-    });
-  }
-
   public addBroadcastFireballDataMessageListener = (listeningPlayer: Player) => {
     this.hubConnection.on('broadcastFireballDataMessage', (fireball: Fireball) => {
-
-      //Server can't return the move function, so it's reassigned here
-      fireball.move = Utilities.angledMoveFunction;
+      FireballActions.startMovement(fireball, this, listeningPlayer);
       this.fireballs.push(fireball);
-      //Fireball's movement
-      const interval = setInterval(() => {
-        if (!fireball.isDestroyed) {
-          fireball.move(fireball, this, fireball.direction, () => {}, OnCollisionAction.Destroy, this.obstacles);
-
-          //Only the player, who cast the fireball, makes collision checks and broadcasts them to everyone
-          if (fireball.casterId === listeningPlayer.id) {
-            this.getFireballWithPlayersCollisions(fireball);
-          }
-
-          if (fireball.isDestroyed) {
-            this.fireballs = this.fireballs.filter(x => x.id !== fireball.id);
-          }
-        } else {
-          clearInterval(interval);
-        }
-      }, fireball.moveIntervalMs);
     })
   }
 
@@ -169,6 +140,17 @@ export class SignalRService {
   public addBroadcastPlayerWinsListener = () => {
     this.hubConnection.on('broadcastPlayerWins', (player: Player) => {
       this.winner = player;
+    })
+  }
+
+  public broadcastGetTagPlayerId = () => {
+    this.hubConnection.invoke('broadcastGetTagPlayerId')
+    .catch(err => console.error(err));
+  }
+
+  public addBroadcastGetTagPlayerIdListener = () => {
+    this.hubConnection.on('broadcastGetTagPlayerId', (playerId: string) => {
+      this.tagPlayerId = playerId;
     })
   }
 }

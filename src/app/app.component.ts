@@ -30,6 +30,7 @@ export class AppComponent implements OnInit {
     this.signalRService.addNewTagListener();
     this.signalRService.addBroadcastPlayerBecomesTagListener();
     this.signalRService.addBroadcastPlayerWinsListener();
+    this.signalRService.addBroadcastGetTagPlayerIdListener();
 
     this.startHttpRequest();
 
