@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PlayAreaComponent } from './play-area.component';
+import { Player } from 'src/app/models/Player.model';
 
 describe('PlayAreaComponent', () => {
   let component: PlayAreaComponent;
@@ -16,6 +17,7 @@ describe('PlayAreaComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(PlayAreaComponent);
     component = fixture.componentInstance;
+    component.clientPlayer = new Player();
     fixture.detectChanges();
   });
 
