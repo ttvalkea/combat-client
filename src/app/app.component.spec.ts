@@ -27,14 +27,7 @@ describe('AppComponent', () => {
   }));
 
   it('should create the app', () => {
-    console.log('heiii------')
-    console.log(AppComponent)
-    console.log('------------^^AppComponent')
-    //Tässä hajoaa
     const fixture = TestBed.createComponent(AppComponent);
-    console.log('fixtureeeee------')
-    console.log(fixture)
-    console.log('fixtureeeeee^^^^^----')
     const app = fixture.debugElement.componentInstance;
     expect(app).toBeTruthy();
   });
